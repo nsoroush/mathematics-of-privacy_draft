@@ -192,7 +192,7 @@ d) 15
 
 ---
 
-##### 🔢 Visual Aid: Modular Arithmetic Wrap-Around
+##### 🔢 Modular Arithmetic Wrap-Around
 
 A peek at \\(\mathbb{Z}_5\\):
 
@@ -201,7 +201,7 @@ A peek at \\(\mathbb{Z}_5\\):
 ℤ₅:            [0][1][2][3][4][0][1][2][3]...
 ```
 
----
+
 
 Next up: diving deeper into \\(\mathbb{Z}_n\\), modular inverses, and finite fields—crypto’s playground!
 
