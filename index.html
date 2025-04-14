@@ -1,0 +1,282 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Introduction - The Math of Privacy</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    </head>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('light')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="0-introduction.html" class="active"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="01-Preliminaries/01-preliminaries_set.html"><strong aria-hidden="true">2.</strong> Preliminaries Sets</a></li><li class="chapter-item expanded "><a href="01-Preliminaries/02-preliminaries_number_theory.html"><strong aria-hidden="true">3.</strong> Preliminaries Number Theory</a></li><li class="chapter-item expanded "><a href="02-Group/group_1.html"><strong aria-hidden="true">4.</strong> Groups</a></li><li class="chapter-item expanded "><a href="cheatsheet.html"><strong aria-hidden="true">5.</strong> CheatSheet</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Math of Privacy</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h3 id="-introduction-to-mathematics-of-privacy-a-practical-journey-from-groups-to-zero-knowledge-proofs"><a class="header" href="#-introduction-to-mathematics-of-privacy-a-practical-journey-from-groups-to-zero-knowledge-proofs">🔐 Introduction to <em>Mathematics of Privacy: A Practical Journey from Groups to Zero-Knowledge Proofs</em></a></h3>
+<p>Picture this: you're a developer staring at your screen, wondering why 3 + 4 refuses to be 7 in elliptic curve land. Or maybe you're knee-deep in a cryptographic library, muttering, “Projective points? Affine points? Why can't they just get along?!”</p>
+<p>Perhaps you're a blockchain buff, a zero-knowledge proof geek, or just someone who hears “cryptography” and thinks, “Cool… but those math bits sound like wizardry.” If any of that's you—high five! You've just stumbled into the right book, and I promise: it's going to be a blast.</p>
+<p>Welcome to <em>Mathematics of Privacy</em>—your ticket to a wild ride through the math that powers the secret-keeping tech of tomorrow. This isn't your dusty old textbook—it's a treasure map for developers, tinkerers, and curious souls who want to crack the code (pun totally intended) behind modern cryptography.</p>
+<p>Whether you're slinging Rust to build elliptic curve magic, dreaming up zero-knowledge proofs, or just here to impress your cat with your smarts, I've got you covered. And guess what? This book is the VIP backstage pass for my course of the same name—yep, it's the main event!</p>
+<p>Think of me as your guide on this epic quest, turning math monsters into friendly sidekicks. We're not just here to stare at equations—we're here to play with them, code them, and maybe even laugh at them a little.</p>
+<h3 id="meet-the-crew-your-mathematical-misfits"><a class="header" href="#meet-the-crew-your-mathematical-misfits">Meet the Crew: Your Mathematical Misfits</a></h3>
+<p>You won't be adventuring alone—I've enlisted a trio of legendary companions to light the way:</p>
+<ul>
+<li><strong>Athena the Wise</strong>: Our oracle of mathematical truth. She's got the wisdom of the gods and a knack for explaining the toughest concepts—like why groups are the backbone of crypto—without making your head spin. Expect her to drop knowledge bombs with Olympian grace.</li>
+<li><strong>Hermes the Trickster</strong>: The mischievous messenger who loves a good puzzle. He's here to throw curveballs, ask sneaky “what if” questions, and keep us on our toes. If there's a clever shortcut or a mind-bending twist, Hermes is your guy.</li>
+<li><strong>Chad the Challenger</strong>: The bold bruiser of the bunch. He's all about throwing down gauntlets—think set theory smackdowns and coding dares. Chad's here to push you to flex those brain muscles and prove you've got what it takes.</li>
+</ul>
+<p>Together, this crew will guide you through the wilds of math and crypto, cracking jokes, sparking “aha!” moments, and maybe starting a few friendly fights along the way. They're your hype squad for this journey—let's roll with them!</p>
+<h3 id="-whats-in-the-treasure-chest"><a class="header" href="#-whats-in-the-treasure-chest">🧭 What's in the Treasure Chest?</a></h3>
+<p>This book's got two big, shiny halves—like a cryptographic sandwich with extra sauce:</p>
+<h4 id="part-1-mathematical-foundations-the-aha-zone"><a class="header" href="#part-1-mathematical-foundations-the-aha-zone">Part 1: Mathematical Foundations (The “Aha!” Zone)</a></h4>
+<ul>
+<li>Groups, rings, and finite fields—think of them as the LEGO bricks of crypto.</li>
+<li>Number theory and polynomial arithmetic—because who doesn't love a good math party?</li>
+<li>Algebraic structures—fancy words for “how stuff fits together.”</li>
+<li>Bonus: Rust, Go, and Python code to make it all click.</li>
+</ul>
+<h4 id="part-2-cryptographic-applications-the-whoa-cool-zone"><a class="header" href="#part-2-cryptographic-applications-the-whoa-cool-zone">Part 2: Cryptographic Applications (The “Whoa, Cool!” Zone)</a></h4>
+<ul>
+<li>Modern privacy tricks—like digital invisibility cloaks.</li>
+<li>Elliptic curves—math's curvy superheroes saving the day.</li>
+<li>Commitment schemes—because promises aren't just for humans.</li>
+<li>Fast Fourier Transforms and FRI.</li>
+<li>Zero-knowledge proofs—the ultimate “prove it without spilling the beans” magic.</li>
+<li>Plus a grab bag of other goodies!</li>
+</ul>
+<h3 id="-why-this-books-a-party"><a class="header" href="#-why-this-books-a-party">🎯 Why This Book's a Party</a></h3>
+<ul>
+<li><strong>For Doers, Not Just Dreamers</strong>: We'll geek out on theory, but only so we can build awesome stuff with it.</li>
+<li><strong>Hands-On Shenanigans</strong>: Rust code, interactive examples—think math meets playground.</li>
+<li><strong>No Boring Bridges</strong>: We're zip-lining from abstract ideas to real-world wins—no snoozing allowed!</li>
+</ul>
+<h3 id="-whos-invited"><a class="header" href="#-whos-invited">👥 Who's Invited?</a></h3>
+<ul>
+<li>Coders itching to conquer blockchain or crypto projects.</li>
+<li>Engineers ready to wrestle privacy protocols into submission.</li>
+<li>Anyone who hears “zero-knowledge” and thinks, “I want in on that secret club!”</li>
+<li>Math newbie? No sweat—we're starting from “1 + 1” and rocketing to “ZK-wow!”</li>
+</ul>
+<h3 id="-what-youll-walk-away-with"><a class="header" href="#-what-youll-walk-away-with">📘 What You'll Walk Away With</a></h3>
+<p>By the end, you'll be the one smirking knowingly when someone mentions:</p>
+<ul>
+<li>How group theory is the puppet master of public-key crypto.</li>
+<li>Why finite fields are the VIPs of zero-knowledge proofs.</li>
+<li>The sneaky brilliance of commitment schemes and elliptic curves.</li>
+<li>The math mojo behind ZK-proof systems that'll make your brain do a happy dance.</li>
+</ul>
+<h3 id="-why-this-adventure-rocks"><a class="header" href="#-why-this-adventure-rocks">🔒 Why This Adventure Rocks</a></h3>
+<p>Privacy is the superhero of our digital age—and math? It's the cape!
+This book is here to turn you into a cape-twirling, code-slinging hero—whether you're building the next big thing or just want to yell, “I get it!” at your laptop.</p>
+<p>It's the heart of my course, but it's also your standalone guide to ruling the privacy galaxy.</p>
+<p>So, grab your coffee (or energy drink), flip the page, and let's dive into the wacky, wonderful world of groups, proofs, and privacy.</p>
+<p>Adventure awaits—let's make it a riot!</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+
+                            <a rel="next prefetch" href="01-Preliminaries/01-preliminaries_set.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+
+                    <a rel="next prefetch" href="01-Preliminaries/01-preliminaries_set.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

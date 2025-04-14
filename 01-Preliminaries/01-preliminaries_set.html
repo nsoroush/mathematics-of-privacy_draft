@@ -1,0 +1,818 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Preliminaries Sets - The Math of Privacy</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    </head>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('light')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="../0-introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="../01-Preliminaries/01-preliminaries_set.html" class="active"><strong aria-hidden="true">2.</strong> Preliminaries Sets</a></li><li class="chapter-item expanded "><a href="../01-Preliminaries/02-preliminaries_number_theory.html"><strong aria-hidden="true">3.</strong> Preliminaries Number Theory</a></li><li class="chapter-item expanded "><a href="../02-Group/group_1.html"><strong aria-hidden="true">4.</strong> Groups</a></li><li class="chapter-item expanded "><a href="../cheatsheet.html"><strong aria-hidden="true">5.</strong> CheatSheet</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Math of Privacy</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <div style="background-color: #d4edda; padding: 10px; border-radius: 5px; color: #155724;">
+<p>Welcome to the world of <em>sets</em>—the foundation of mathematics, like organizing bins for the universe! Whether you're sorting numbers, letters, or ideas, sets bring clarity to the chaos. Let's dive in with our crew: <strong>Athena</strong>, the wise guide, and <strong>Hermes</strong>, the curious questioner!</p>
+<p>In this section, we'll explore what sets are, how to notate them, the curious empty set, subsets, and operations that combine sets in powerful ways. Sets are everywhere—from organizing data to underpinning cryptography—so let's get started!</p>
+</div>
+<h2 id="1-setsthe-building-blocks-of-maths-playground"><a class="header" href="#1-setsthe-building-blocks-of-maths-playground">1. Sets—The Building Blocks of Math's Playground</a></h2>
+<h3 id="11-whats-a-set-anyway"><a class="header" href="#11-whats-a-set-anyway">1.1 What's a Set, Anyway?</a></h3>
+<p>A <strong>set</strong> is a well-defined collection of distinct objects, called <strong>elements</strong> (or members). These can be numbers, letters, or even quirky things like your favorite snacks. The key is clarity: we must know exactly what's included. We write sets using curly braces \(\lbrace \rbrace\), and neither order nor duplicates matter—\(\lbrace 1, 2, 2, 3\rbrace\)is simply   \(\lbrace 1, 2, 3\rbrace\).</p>
+<ul>
+<li><strong>Example 1</strong>: The set of vowels: \(S =\lbrace  a, e, i, o, u\rbrace \). Here, \(a \in S \), but \(z \notin S \).</li>
+<li><strong>Example 2</strong>: Even numbers less than 10: \(T = \lbrace 2, 4, 6, 8\rbrace \). So, \(4 \in T \), but \(3 \notin T \).</li>
+<li><strong>Example 3</strong>: A fun set: \(W = \lbrace  \text{pizza}, \text{soccer}, \text{blue} , 2, {4}\rbrace \). It's valid as long as the context is clear!</li>
+</ul>
+<blockquote>
+<p>**<strong>Hermes</strong> raises his hand, smirking. <code>So, Athena, can I make a set of *all* my brilliant ideas? Or is that too vague?</code>
+<strong>Athena</strong> smiles: <code>Sharp question, Hermes! Your ideas need a clear rule, like 'Hermes' ideas written today,' or it's too fuzzy for a set. Precision is key!</code></p>
+</blockquote>
+<p><strong>Challenge</strong>:</p>
+<p><strong>Exercise</strong>: Consider the set \(A = \lbrace 1, \lbrace 2\rbrace\rbrace \). Which of these are true?(write <code>true</code> or <code>false</code> and then check your answer!)</p>
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</head>
+<body>
+  <div class="exercise" data-question="1. \(1 \in A \)" data-answer="true">
+    <p class="question"></p>
+    <input type="text" class="answer" placeholder="Enter your answer (true/false)">
+    <button class="submit">Submit</button>
+    <p class="feedback"></p>
+  </div>
+  <div class="exercise" data-question="2. \(2 \in A\)" data-answer="false">
+    <p class="question"></p>
+    <input type="text" class="answer" placeholder="Enter your answer (true/false)">
+    <button class="submit">Submit</button>
+    <p class="feedback"></p>
+  </div>
+  <div class="exercise" data-question="3. \(\lbrace 2\rbrace \in A \)" data-answer="true">
+    <p class="question"></p>
+    <input type="text" class="answer" placeholder="Enter your answer (true/false)">
+    <button class="submit">Submit</button>
+    <p class="feedback"></p>
+  </div>
+  <script>
+    document.querySelectorAll('.exercise').forEach(exercise => {
+      // Set the question text
+      const questionText = exercise.getAttribute('data-question');
+      exercise.querySelector('.question').textContent = questionText;
+
+      // Get elements
+      const input = exercise.querySelector('.answer');
+      const button = exercise.querySelector('.submit');
+      const feedback = exercise.querySelector('.feedback');
+      const correctAnswer = exercise.getAttribute('data-answer').toLowerCase();
+
+      // Function to check the answer
+      function checkAnswer() {
+        const userAnswer = input.value.trim().toLowerCase();
+        if (userAnswer === correctAnswer) {
+          feedback.textContent = "✅ Correct!";
+          feedback.style.color = "green";
+        } else {
+          feedback.textContent = "❌ Incorrect. Try again.";
+          feedback.style.color = "red";
+        }
+      }
+
+      // Submit on button click
+      button.addEventListener('click', checkAnswer);
+
+      // Submit on Enter key
+      input.addEventListener('keypress', (event) => {
+        if (event.key === 'Enter') {
+          checkAnswer();
+        }
+      });
+    });
+
+    // Trigger MathJax to render LaTeX
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+  </script>
+</body>
+</html>
+<p><strong>Answers</strong>:</p>
+<ul>
+<li>
+<ol>
+<li><strong>True</strong>: \(1 \)is an element of \(A = \lbrace 1, \lbrace 2\rbrace\rbrace \), so \(1 \in A \).</li>
+</ol>
+</li>
+<li>
+<ol start="2">
+<li><strong>False</strong>: \(2 \)is not directly an element; \(\lbrace 2\rbrace \)is the element, so \(2 \notin A \).</li>
+</ol>
+</li>
+<li>
+<ol start="3">
+<li><strong>True</strong>: \(\lbrace 2\rbrace \)is explicitly listed as an element, so \(\lbrace 2\rbrace \in A \).</li>
+</ol>
+</li>
+</ul>
+<p>This shows sets can contain other sets as elements—mind-bending but fun!</p>
+<hr />
+<h2 id="2-notation-tidbit"><a class="header" href="#2-notation-tidbit">2. Notation Tidbit</a></h2>
+<ul>
+<li><strong>\(\in \)</strong>: "is an element of."</li>
+<li><strong>\(\notin \)</strong>: "is not an element of."</li>
+<li><strong>\(|A| \)</strong>: The number of elements in set \(A \), called <strong>cardinality</strong>. For \(A = \lbrace 1, 2, 3\rbrace \), \(|A| = 3 \).</li>
+</ul>
+<p>Sets can be <strong>finite</strong>, with a fixed number of elements, like \(A = \lbrace 1, 2, 3\rbrace \)(\(|A| = 3 \)), or <strong>infinite</strong>, with elements that go on forever, like the natural numbers \(\mathbb{N} = \lbrace 0, 1, 2, \ldots\rbrace \).</p>
+<blockquote>
+<p><strong>Hermes pipes up.</strong><br />
+"So, an infinite set's like an endless treasure chest?"<br />
+<strong>Athena nods.</strong><br />
+"Exactly, Hermes! Its elements never run out, making sets so versatile."</p>
+</blockquote>
+<p>For finite sets, \(|A| \)is a simple count. For infinite sets, comparing sizes gets tricky—saying \(|\mathbb{N}| = \infty \)is informal, and we'll explore better ways later.</p>
+<blockquote>
+<p><strong>Hermes tilts his head, puzzled.</strong><br />
+"Hold on, Athena. Take the set \(\lbrace 2, 4, \ldots\rbrace \). It could be multiples of two, like \(\lbrace 2, 4, 6, \ldots\rbrace \), or powers of two, like \(\lbrace 2, 4, 8, \ldots\rbrace \). How do we avoid mix-ups?"<br />
+<strong>Athena smiles.</strong><br />
+"Brilliant, Hermes! That's where <strong>set representation</strong> clears things up. We use two main methods to define sets precisely."</p>
+</blockquote>
+<hr />
+<h3 id="representing-sets"><a class="header" href="#representing-sets">Representing Sets</a></h3>
+<ol>
+<li>
+<p><strong>Roster Notation</strong>: List elements explicitly, ideal for finite sets or clear patterns.</p>
+<ul>
+<li>Example: Multiples of two (showing a pattern): \(\lbrace 2, 4, 6, 8, \ldots\rbrace \).</li>
+<li>Finite set: \(\lbrace 2, 4, 6\rbrace \)(first three even numbers).</li>
+</ul>
+</li>
+<li>
+<p><strong>Set-Builder Notation</strong>: Define elements by a rule: \(\lbrace  x \mid \text{condition on } x\rbrace \), read as "the set of all \(x \)such that [condition]."</p>
+<ul>
+<li>Multiples of two: \(A = \lbrace 2n \mid n \in \mathbb{N}, n \geq 1\rbrace = \lbrace 2, 4, 6, \ldots\rbrace \).</li>
+<li>Powers of two: \(B = \lbrace 2^n \mid n \in \mathbb{N}, n \geq 1\rbrace = \lbrace 2, 4, 8, 16, \ldots\rbrace \).</li>
+</ul>
+</li>
+</ol>
+<ul>
+<li><strong>Example 4</strong>: \(A = \lbrace x \mid x \text{ is an odd integer and } x &lt; 6\rbrace = \lbrace 1, 3, 5\rbrace \).</li>
+<li><strong>Example 5</strong>: \(C = \lbrace x \mid x \text{ is a positive multiple of } 3 \text{ less than } 10\rbrace = \lbrace 3, 6, 9\rbrace \).</li>
+</ul>
+<p>So, Hermes' sets are:</p>
+<ul>
+<li>Multiples of two: \(\lbrace 2n \mid n \in \mathbb{N}, n \geq 1\rbrace \).</li>
+<li>Powers of two: \(\lbrace 2^n \mid n \in \mathbb{N}, n \geq 1\rbrace \).</li>
+</ul>
+<blockquote>
+<p><strong>Hermes nods eagerly.</strong><br />
+"Got it! Set-builder notation makes it crystal clear!"<br />
+<strong>Athena continues.</strong><br />
+"Exactly. Clear rules let us define sets, especially infinite ones, without confusion."</p>
+</blockquote>
+<p>To make set-builder notation even stronger, we use standard symbols for common sets:</p>
+<hr />
+<h3 id="classic-sets"><a class="header" href="#classic-sets">Classic Sets</a></h3>
+<p>These sets are the superstars of math, especially in fields like cryptography:</p>
+<ul>
+<li><strong>\(\mathbb{N} \)</strong>: Natural numbers \(\lbrace 0, 1, 2, 3, \ldots\rbrace \)(for counting).</li>
+<li><strong>\(\mathbb{Z} \)</strong>: Integers \(\lbrace \ldots, -2, -1, 0, 1, 2, \ldots\rbrace \)(whole numbers, positive or negative).</li>
+<li><strong>\(\mathbb{Q} \)</strong>: Rational numbers \(\lbrace \frac{a}{b} \mid a, b \in \mathbb{Z}, b \neq 0\rbrace \), like \(\frac{1}{2} \), \(-\frac{3}{4} \).</li>
+<li><strong>\(\mathbb{R} \)</strong>: Real numbers (all points on the number line, like \(\pi \), \(\sqrt{2} \), \(-1.5 \)).</li>
+<li><strong>\(\mathbb{C} \)</strong>: Complex numbers \(\lbrace a + bi \mid a, b \in \mathbb{R}, i^2 = -1\rbrace \), like \(2 + 3i \).</li>
+</ul>
+<blockquote>
+<p><strong>Athena</strong> <code>We can also visualize sets with **Venn diagrams** to show relationships, but we'll dive into those later. For now, let's see some examples in action!</code></p>
+</blockquote>
+<hr />
+<h3 id="examples-of-sets-using-classic-sets"><a class="header" href="#examples-of-sets-using-classic-sets">Examples of Sets Using Classic Sets</a></h3>
+<ol>
+<li>Even positive integers: \(\lbrace 2n \mid n \in \mathbb{N}, n \geq 1\rbrace = \lbrace 2, 4, 6, \ldots\rbrace \).</li>
+<li>Even integers: \(\lbrace 2a \mid a \in \mathbb{Z}\rbrace = \lbrace \ldots, -4, -2, 0, 2, 4, \ldots\rbrace \).</li>
+<li>Positive rationals: \(\lbrace \frac{p}{q} \mid p, q \in \mathbb{N}, q \neq 0\rbrace = \lbrace \frac{1}{2}, \frac{2}{3}, \frac{4}{1}, \ldots\rbrace \).</li>
+<li>Non-negative reals: \(\lbrace x \mid x \in \mathbb{R}, x \geq 0\rbrace = \lbrace 0, 1, \pi, \sqrt{2}, \ldots\rbrace \).</li>
+<li>Integers divisible by 3: \(\lbrace 3k \mid k \in \mathbb{Z}\rbrace = \lbrace \ldots, -6, -3, 0, 3, 6, \ldots\rbrace \).</li>
+</ol>
+<h3 id="exercises"><a class="header" href="#exercises">Exercises</a></h3>
+<p>Time to put your set skills to the test! These challenges will sharpen your thinking and prepare you for what's next. Dive in, and let's see those brilliant ideas shine!</p>
+<ol>
+<li>
+<p><strong>Notation Practice</strong>:</p>
+<ul>
+<li>Write the set of prime numbers less than 10 in both roster and set-builder notation.</li>
+<li><strong>Hermes' Question</strong>: Is this set finite or infinite? How do you know?</li>
+</ul>
+</li>
+<li>
+<p><strong>Set-Builder and Cardinality</strong>:</p>
+<ul>
+<li>Define the set of all positive integers divisible by 5 and less than 25 using set-builder notation.</li>
+<li>List the elements in roster form.</li>
+<li>What is the cardinality of this set? Show your reasoning.</li>
+</ul>
+</li>
+<li>
+<p><strong>Classic Sets Challenge</strong>:</p>
+<ul>
+<li>Consider the set \(B = \lbrace  x \mid x \in \mathbb{Q}, x = \frac{a}{2}, a \in \mathbb{Z}, -2 \leq a \leq 2 \rbrace \).
+<ul>
+<li>Write \(B \)in roster form.</li>
+<li>Is \(B \subseteq \mathbb{Q} \)? Explain.</li>
+<li><strong>Hermes' Twist</strong>: If we change the condition to \(a \in \mathbb{N} \), how does \(B \)change?</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Infinite Sets Puzzle</strong>:</p>
+<ul>
+<li>Let \(C = \lbrace  4n \mid n \in \mathbb{Z} \rbrace \).
+<ul>
+<li>Give the first three positive and three negative elements of \(C \).</li>
+<li>Is \(C \)finite or infinite? Compare its cardinality to \(\mathbb{Z} \).</li>
+<li><strong>Athena's Hint</strong>: Think about how \(C \)relates to even numbers!</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Empty Set Teaser</strong>:</p>
+<ul>
+<li>Define a set \(D \)using set-builder notation such that it contains all integers \(x \)where \(x^2 = -4 \).</li>
+<li>What is \(D \)? Why does it have this form?</li>
+<li><strong>Hermes' Challenge</strong>: Can you find another condition that gives the same set \(D \)?</li>
+</ul>
+</li>
+</ol>
+<blockquote>
+<p><strong>Athena</strong> winks.<code>That last one's a clue to something curious we're about to explore—sets with *nothing* in them!</code></p>
+</blockquote>
+<h3 id="the-empty-set"><a class="header" href="#the-empty-set">The Empty Set</a></h3>
+<p>Sometimes, we encounter sets with no elements at all! This is the <strong>empty set</strong>, denoted \(\emptyset\)or \(\lbrace \rbrace\), containing nothing—like an empty treasure chest. Just as zero grounds arithmetic, the empty set grounds set theory.</p>
+<ul>
+<li><strong>Example 9</strong>: The set of odd numbers divisible by 2 = \(\emptyset\)(no such numbers exist).</li>
+<li><strong>Example 10</strong>: \(\lbrace x \mid x \in \mathbb{Z}, x^2 = -1\rbrace = \emptyset \)(no integer's square is negative).</li>
+<li><strong>Example 11</strong>: \(\lbrace x \mid x \in \mathbb{R}, x^2 + 1 = 0\rbrace = \emptyset \)(no real number satisfies this equation).</li>
+</ul>
+<blockquote>
+<p><strong>Ares</strong> jumps in, scratching his head. <code>Why bother with a set that's got *nothing* in it? What's the point?</code></p>
+<p><strong>Athena:</strong> <code>Great question, Ares! The empty set is like zero—it keeps our rules consistent. For instance, the intersection of two sets with no common elements, like</code> \(\lbrace 1, 2\rbrace \) <code>and</code> \(\lbrace 3, 4\rbrace \)<code>, gives</code> \(\emptyset\)<code>. It's a clear answer when there's nothing to show, and it'll shine in operations soon!</code></p>
+</blockquote>
+<h3 id="subsets"><a class="header" href="#subsets">Subsets</a></h3>
+<div style="display: flex; align-items: center; gap: 20px;">
+    <img src="C:\Users\nilgo\Documents\the-school-of-athena\books\Mathematics Of Privacy\image\01_venn's.png" alt="Venn Diagram Example" style="width:200px;"/>
+    <div>
+        Athena steps forward, holding up a sketch. To make sets even clearer, let's introduce a handy tool: `Venn diagrams`! These are pictures where sets are shown as circles, and their relationships—like one set being inside another—are easy to see. They're perfect for understanding subsets, and we'll use them more as we go!
+    </div>
+</div>
+<p>A set \(A \) is a <strong>subset</strong> of \(B \), written \(A \subseteq B \), if every element of \(A \)is also in \(B \). If \(A \neq B \), it's a <strong>proper subset</strong>, denoted \(A \subset B \).</p>
+<ul>
+<li>
+<p>The empty set is a subset of every set: \(\emptyset \subseteq A\)(no elements to contradict!).</p>
+</li>
+<li>
+<p>Every set is a subset of itself: \(A \subseteq A \).</p>
+</li>
+<li>
+<p><strong>Example 12</strong>: Let \(B = \lbrace 1, 2, 3\rbrace \).</p>
+<ul>
+<li>\(\lbrace 1, 2\rbrace \subseteq B \), and \(\lbrace 1, 2\rbrace \subset B\)(proper subset).</li>
+<li>\(\lbrace 1, 4\rbrace \not\subseteq B \)(since \(4 \notin B \)).</li>
+</ul>
+</li>
+<li>
+<p><strong>Example 13</strong>: \(\lbrace a, e\rbrace \subseteq \lbrace a, b, c, d, e\rbrace \)(vowels in a small alphabet).</p>
+</li>
+</ul>
+<div style="display: flex; align-items: center; gap: 20px;">
+    <img src="C:\Users\nilgo\Documents\the-school-of-athena\books\Mathematics Of Privacy\image\02_venn.png" alt="Venn Diagram Example" style="width:200px;"/>
+</div>
+<blockquote>
+<p><strong>Hermes</strong> leans forward, curious. <code>Athena, what about the cardinality of a set and its subsets? Is there a rule for their sizes?</code></p>
+<p><strong>Athena</strong>: <code>Excellent question, Hermes! Let's check the board!</code></p>
+<p>If \(A \subseteq B \), the cardinality of \(A \), \(|A| \), is less than or equal to that of \(B \), \(|B| \). That is, \(|A| \leq |B| \). For example, if \(B = \lbrace 1, 2, 3\rbrace \)(\(|B| = 3 \)), a subset like \(\lbrace 1, 2\rbrace \)has \(|A| = 2 \leq 3 \), and \(\emptyset \)has \(|\emptyset| = 0 \leq 3 \). Proper subsets \(A \subset B \)have \(|A| &lt; |B| \)if \(B \)is non-empty. This reflects that \(A \)can't have more elements than \(B \)—it's contained within it!</p>
+</blockquote>
+<h4 id="41-power-set"><a class="header" href="#41-power-set">4.1 Power Set</a></h4>
+<p>The <strong>power set</strong> \(\mathcal{P}(A) \)is the set of all subsets of \(A \).</p>
+<ul>
+<li><strong>Example 14</strong>: For \(A = \lbrace 1, 2\rbrace \), \(\mathcal{P}(A) = \lbrace \emptyset, \lbrace 1\rbrace, \lbrace 2\rbrace, \lbrace 1, 2\rbrace\rbrace \). It has \(2^2 = 4 \)subsets.</li>
+<li><strong>Example 15</strong>: For \(A = \lbrace x\rbrace \), \(\mathcal{P}(A) = \lbrace \emptyset, \lbrace x\rbrace\rbrace \), with \(2^1 = 2 \)subsets.</li>
+</ul>
+<blockquote>
+<p><strong>Athena</strong> asks,<code>So, Athena, how many subsets does</code> \(\lbrace 1, 2, 3\rbrace \) <code>have?</code>
+<strong>Hermes</strong> replies: <code>Let's list them systematically, grouping by size—starting with zero elements and ending with all three. A subset can't have more elements than the set itself.</code></p>
+</blockquote>
+<p>Let's write the power set of \(\lbrace 1, 2, 3\rbrace \):</p>
+<ul>
+<li><strong>0 elements</strong>: \(\emptyset \)</li>
+<li><strong>1 element</strong>: \(\lbrace 1\rbrace, \lbrace 2\rbrace, \lbrace 3\rbrace \)</li>
+<li><strong>2 elements</strong>: \(\lbrace 1, 2\rbrace, \lbrace 1, 3\rbrace, \lbrace 2, 3\rbrace \)</li>
+<li><strong>3 elements</strong>: \(\lbrace 1, 2, 3\rbrace \)</li>
+</ul>
+<p>Total: \(1 + 3 + 3 + 1 = 8 \)subsets.<br />
+So, \(\mathcal{P}(\lbrace 1, 2, 3\rbrace) = \lbrace \emptyset, \lbrace 1\rbrace, \lbrace 2\rbrace, \lbrace 3\rbrace, \lbrace 1, 2\rbrace, \lbrace 1, 3\rbrace, \lbrace 2, 3\rbrace, \lbrace 1, 2, 3\rbrace\rbrace \).</p>
+<blockquote>
+<p><strong>Athena</strong> :<code> Looks right to me! Hermes, you're fast</code>
+<strong>Hermes</strong> <code>Okay, but is there a pattern? Does cardinality always tie to the power set like that?</code>
+<strong>Athena</strong> beams.`Sharp eye, Hermes! There is a math formula for it , and to check it carefully we need to go behinde the scene!</p>
+</blockquote>
+<p><em><strong>Math Behind the Scene:</strong></em> For a set \(A \)with cardinality \(|A| = n \), its power set \(\mathcal{P}(A) \)has \(2^n \)elements. Why? Each element can be included or excluded—two choices per element. For \(n = 3 \), that's \(2^3 = 8 \). This holds for any finite set. Infinite sets? That's a whole new story!</p>
+<p><strong>Challenge Exercise</strong>:</p>
+<ul>
+<li>Find a subset of \(\lbrace 1, 2, 3\rbrace \)with cardinality 2 and write it in roster form.</li>
+<li>Is it a proper subset? Explain why or why not.</li>
+<li><strong>Hermes' Twist</strong>: Can you find all subsets with cardinality 2? How many are there?</li>
+</ul>
+<hr />
+<h3 id="5-the-universal-set"><a class="header" href="#5-the-universal-set">5. The Universal Set</a></h3>
+<p><strong>Athena gestures broadly.</strong><br />
+"Before we combine sets, we need a playground—the <strong>universal set</strong>, denoted \(U \), containing all possible elements in our context. Every set we discuss is a subset of \(U \), like treasures in a giant chest."</p>
+<p>The universal set depends on the problem:</p>
+<ul>
+<li>If \(U = \mathbb{N} = \lbrace 0, 1, 2, 3, \ldots\rbrace \), we focus on natural numbers.</li>
+<li>If \(U = \mathbb{Z} = \lbrace \ldots, -2, -1, 0, 1, 2, \ldots\rbrace \), we include all integers.</li>
+<li>If \(U = \lbrace a, b, c, d, e\rbrace \), we're limited to those letters.</li>
+<li>If \(U = \lbrace \text{Ace}, \text{King}, \text{Queen}, \ldots, \text{2}\rbrace \)(a 52-card deck), we're dealing with cards.</li>
+</ul>
+<p><strong>Athena</strong> adds <code>In Venn diagrams, we draw the universal set as a rectangle, with all sets as circles inside it, showing how they fit within \\(U \\)'s boundaries.</code></p>
+<p><strong>[Venn Diagram Placeholder: Show \(U = \lbrace a, b, c, d, e\rbrace \)as a rectangle, with \(B = \lbrace a, c\rbrace \)as a circle inside, and \(B^c = \lbrace b, d, e\rbrace \)as the area outside \(B \)but within \(U \), to illustrate Example 17.]</strong></p>
+<div style="display: flex; align-items: center; gap: 20px;">
+    <img src="C:\Users\nilgo\Documents\the-school-of-athena\books\Mathematics Of Privacy\image\03_complement.png" alt="Venn Diagram Example" style="width:200px;"/>
+    <div>
+        In Venn diagrams, we draw the universal set as a rectangle, with all sets as circles inside it, showing how they fit within \(U \)'s boundaries.
+    </div>
+</div>
+<blockquote>
+<p><strong>Hermes, scribbling, looks up.</strong><br />
+"Hey, Athena, I'm exploring even numbers! I can write them as:</p>
+<ul>
+<li>\(E = \lbrace \ldots, -4, -2, 0, 2, 4, \ldots\rbrace \), or formally, \(E = \lbrace 2i \mid i \in \mathbb{Z}\rbrace \).<br />
+But what if I want even numbers in the natural numbers? I'm confused!"<br />
+<strong>Athena smiles warmly.</strong><br />
+"Great catch, Hermes! The universal set clarifies this. Without \(U \), 'even numbers' is ambiguous:</li>
+<li>If \(U = \mathbb{Z} \), then \(E_{\mathbb{Z}} = \lbrace 2i \mid i \in \mathbb{Z}\rbrace = \lbrace \ldots, -4, -2, 0, 2, 4, \ldots\rbrace \).</li>
+<li>If \(U = \mathbb{N} \), then \(E_{\mathbb{N}} = \lbrace 2i \mid i \in \mathbb{N}\rbrace = \lbrace 0, 2, 4, 6, \ldots\rbrace \).<br />
+Defining \(U \)keeps our sets precise."</li>
+</ul>
+</blockquote>
+<p>The universal set is crucial for operations like <strong>complement</strong>, which we'll explore next. The complement of a set \(A \), written \(A^c \), is all elements in \(U \)not in \(A \)—it depends entirely on \(U \).</p>
+<ul>
+<li>
+<p><strong>Example 16</strong>: Let \(A = \lbrace 1, 2, 3\rbrace \).</p>
+<ul>
+<li>If \(U = \lbrace 0, 1, 2, 3, \ldots, 10\rbrace \), then \(A^c = \lbrace 0, 4, 5, 6, 7, 8, 9, 10\rbrace \).</li>
+<li>If \(U = \lbrace 1, 2, 3, \ldots, 30\rbrace \), then \(A^c = \lbrace 4, 5, \ldots, 30\rbrace \).</li>
+</ul>
+</li>
+<li>
+<p><strong>Example 17</strong>: If \(U = \lbrace a, b, c, d, e\rbrace \), and \(B = \lbrace a, c\rbrace \), then \(B^c = \lbrace b, d, e\rbrace \). If \(U = \lbrace a, b, \ldots, z\rbrace \), then \(B^c = \lbrace b, d, \ldots, z\rbrace \).</p>
+</li>
+<li>
+<p><strong>Example 18</strong>: If \(U = \lbrace \text{Ace of Spades}, \text{Ace of Hearts}, \text{King of Spades}, \text{King of Hearts}\rbrace \), and \(C = \lbrace \text{Ace of Spades}\rbrace \), then \(C^c = \lbrace \text{Ace of Hearts}, \text{King of Spades}, \text{King of Hearts}\rbrace \).</p>
+</li>
+</ul>
+<blockquote>
+<p><strong>Hermes nods excitedly.</strong><br />
+"So, 'everything else' means 'everything else in \(U \)'! That's why \(U \)matters!"<br />
+<strong>Athena chuckles.</strong><br />
+"Exactly, Hermes. The universal set sets the stage. Without it, we're guessing—and in set theory, precision is our superpower!"</p>
+</blockquote>
+<h3 id="-practice-exercises-universal-sets--complements"><a class="header" href="#-practice-exercises-universal-sets--complements">🧠 Practice Exercises: Universal Sets &amp; Complements</a></h3>
+<ol>
+<li>
+<p><strong>Identify the Complement</strong><br />
+Let \(U = \lbrace 0, 1, 2, \ldots, 9\rbrace \), and \(A = \lbrace 2, 4, 6, 8\rbrace \).<br />
+a) List \(A^c \).<br />
+b) Is \(5 \in A^c \)?<br />
+c) Is \(4 \in A^c \)?</p>
+</li>
+<li>
+<p><strong>Changing the Universal Set</strong><br />
+Suppose \(A = \lbrace 1, 2, 3\rbrace \).<br />
+a) If \(U = \lbrace 1, 2, 3, 4, 5\rbrace \), what is \(A^c \)?<br />
+b) If \(U = \lbrace 0, 1, 2, \ldots, 10\rbrace \), what is \(A^c \)?<br />
+c) How do your answers differ? Why?</p>
+</li>
+<li>
+<p><strong>True or False</strong><br />
+For each statement, write <strong>True</strong> or <strong>False</strong>, and justify your answer.<br />
+a) If \(A \subseteq B \), then \(B^c \subseteq A^c \).<br />
+b) If \(A = U \), then \(A^c = \emptyset \).<br />
+c) If \(A = \emptyset \), then \(A^c = U \).</p>
+</li>
+<li>
+<p><strong>Venn Diagram Completion</strong><br />
+Given \(U = \lbrace a, b, c, d, e, f\rbrace \), \(A = \lbrace a, b, c\rbrace \), and \(B = \lbrace b, c, d\rbrace \):<br />
+a) Find \(A^c \), \(B^c \), and \(A \cap B \).<br />
+b) Draw a Venn diagram showing sets \(A \)and \(B \)inside \(U \). Shade \(A^c \)and label clearly.</p>
+</li>
+<li>
+<p><strong>Real-World Sets</strong><br />
+Consider this scenario:<br />
+\(U \)= All students in a school.<br />
+\(A \)= Students who take math.<br />
+\(B \)= Students who take music.<br />
+a) Describe in words what \(A^c \)and \(B^c \)represent.<br />
+b) What does \(A^c \cap B^c \)mean in this context?<br />
+c) What does \((A \cup B)^c \)represent?</p>
+</li>
+<li>
+<p><strong>Build Your Own</strong><br />
+Design your own universal set \(U \)and create two sets \(A \)and \(B \)within it. Then:<br />
+a) List \(A \), \(B \), \(A^c \), and \(B^c \).<br />
+b) Find \(A \cup B \), \(A \cap B \), and \((A \cup B)^c \).<br />
+c) Share it with a friend (or classmate) and see if they get the same results!</p>
+</li>
+</ol>
+<h2 id="6-set-operations"><a class="header" href="#6-set-operations">6. Set Operations</a></h2>
+<p><strong>Athena waves her hand over an imaginary map.</strong><br />
+Now that we've set up our universal set as the playground, let's mix up sets! To make things crystal clear, we'll use <strong>Venn diagrams</strong>—pictures showing sets as circles, often overlapping, to reveal their relationships.</p>
+<h3 id="61-union-"><a class="header" href="#61-union-">6.1 Union (∪)</a></h3>
+<p>The <strong>union</strong> of sets \(A \)and \(B \), written \(A \cup B \), is the set of all elements in \(A \), \(B \), or both. Think of it as combining everything from two treasure chests into one big pile, with no duplicates.</p>
+<ul>
+<li><strong>Example 19</strong>: Let \(A = \lbrace 1, 2, 3\rbrace \), \(B = \lbrace 3, 4, 5\rbrace \), with \(U = \lbrace 1, 2, \ldots, 10\rbrace \).<br />
+\(A \cup B = \lbrace 1, 2, 3, 4, 5\rbrace \). (We include 3 only once—no duplicates!)</li>
+</ul>
+<div style="display: flex; align-items: center; gap: 20px;">
+    <img src="C:\Users\nilgo\Documents\the-school-of-athena\books\Mathematics Of Privacy\image\04_union.png" alt="Venn Diagram Example" style="width:200px;"/>
+    <div>
+        In Venn diagrams, we draw the universal set as a rectangle, with all sets as circles inside it, showing how they fit within \(U \)'s boundaries.
+    </div>
+</div>
+<ul>
+<li>
+<p><strong>Example 20</strong>: Let \(A = \lbrace a, b, c\rbrace \), \(B = \lbrace c, d\rbrace \), with \(U = \lbrace a, b, c, d, e\rbrace \).<br />
+\(A \cup B = \lbrace a, b, c, d\rbrace \).<br />
+<strong>[Venn Diagram Placeholder: Show \(A \)'s circle with a, b, c, \(B \)'s with c, d, overlapping at c. Shade both circles to show \(A \cup B \).]</strong></p>
+</li>
+<li>
+<p><strong>Example 21</strong>: Let \(A = \lbrace \text{red}, \text{blue}\rbrace \), \(B = \lbrace \text{blue}, \text{green}\rbrace \), with \(U = \lbrace \text{red}, \text{blue}, \text{green}, \text{yellow}\rbrace \).<br />
+\(A \cup B = \lbrace \text{red}, \text{blue}, \text{green}\rbrace \).<br />
+<strong>[Venn Diagram Placeholder: Show circles overlapping at blue, with \(A \)holding red, blue, and \(B \)holding blue, green. Shade all of \(A \)and \(B \)for the union.]</strong></p>
+</li>
+</ul>
+<p>Venn diagrams help us visualize unions in different cases:</p>
+<ol>
+<li>
+<p><strong>Disjoint Sets</strong>: When \(A \)and \(B \)have no common elements (e.g., \(A = \lbrace 1, 2\rbrace \), \(B = \lbrace 3, 4\rbrace \)).<br />
+<strong>[Venn Diagram Placeholder: Show two non-overlapping circles, one for \(A \), one for \(B \). Shade both to show \(A \cup B \).]</strong><br />
+Here, the cardinality is simple: \(|A \cup B| = |A| + |B| \), since there's no overlap.</p>
+</li>
+<li>
+<p><strong>Overlapping Sets</strong>: When \(A \)and \(B \)share elements (e.g., \(A = \lbrace 1, 2, 3\rbrace \), \(B = \lbrace 3, 4\rbrace \)).<br />
+<strong>[Venn Diagram Placeholder: Show two overlapping circles, with 3 in the middle. Shade both circles for \(A \cup B \).]</strong><br />
+<strong>Hermes pipes up.</strong> "What's the cardinality of \(A \cup B \)now, Athena?"<br />
+<strong>Athena smiles.</strong> "Great question, Hermes! When sets overlap, we can't just add \(|A| + |B| \)—that double-counts shared elements. Instead, use: \(|A \cup B| = |A| + |B| - |A \cap B| \). For \(A = \lbrace 1, 2, 3\rbrace \), \(B = \lbrace 3, 4\rbrace \), we have \(|A| = 3 \), \(|B| = 2 \), \(|A \cap B| = |\lbrace 3\rbrace| = 1 \), so \(|A \cup B| = 3 + 2 - 1 = 4 \). This ensures 3 is counted once!"</p>
+</li>
+</ol>
+<p><strong>Exercises</strong>:</p>
+<ol>
+<li>What is \(A \cup \emptyset \)? Explain why.</li>
+<li>Are \(A \cup B \)and \(B \cup A \)the same? Why or why not?</li>
+<li>What is \(A \cup U \), where \(U \)is the universal set? Justify your answer.</li>
+</ol>
+<h3 id="62-intersection-"><a class="header" href="#62-intersection-">6.2 Intersection (∩)</a></h3>
+<p>The <strong>intersection</strong> of sets \(A \)and \(B \), written \(A \cap B \), is the set of all elements common to both \(A \)and \(B \). It's like finding the treasures both chests share.</p>
+<ul>
+<li>
+<p><strong>Example 22</strong>: Let \(A = \lbrace 1, 2, 3\rbrace \), \(B = \lbrace 3, 4, 5\rbrace \), with \(U = \lbrace 1, 2, \ldots, 10\rbrace \).<br />
+\(A \cap B = \lbrace 3\rbrace \).<br />
+<strong>[Venn Diagram Placeholder: Show two overlapping circles, one for \(A \)with 1, 2, 3, one for \(B \)with 3, 4, 5, overlapping at 3. Shade only the overlapping section to represent \(A \cap B \).]</strong></p>
+</li>
+<li>
+<p><strong>Example 23</strong>: Let \(A = \lbrace a, b, c\rbrace \), \(B = \lbrace c, d\rbrace \), with \(U = \lbrace a, b, c, d, e\rbrace \).<br />
+\(A \cap B = \lbrace c\rbrace \).<br />
+<strong>[Venn Diagram Placeholder: Show \(A \)'s circle with a, b, c, \(B \)'s with c, d, overlapping at c. Shade the overlap for \(A \cap B \).]</strong></p>
+</li>
+<li>
+<p><strong>Example 24</strong>: Let \(A = \lbrace \text{red}, \text{blue}\rbrace \), \(B = \lbrace \text{blue}, \text{green}\rbrace \), with \(U = \lbrace \text{red}, \text{blue}, \text{green}, \text{yellow}\rbrace \).<br />
+\(A \cap B = \lbrace \text{blue}\rbrace \).<br />
+<strong>[Venn Diagram Placeholder: Show circles overlapping at blue, with \(A \)holding red, blue, and \(B \)holding blue, green. Shade the overlap for \(A \cap B \).]</strong></p>
+</li>
+</ul>
+<blockquote>
+<p><strong>Hermes raises his hand.</strong><br />
+"Athena, what if two sets have nothing in common? And what about the size of the intersection?"<br />
+<strong>Athena nods.</strong><br />
+"Sharp thinking, Hermes! If \(A \)and \(B \)have no common elements, their intersection is the empty set, \(A \cap B = \emptyset \). For example, \(\lbrace 1, 2\rbrace \cap \lbrace 3, 4\rbrace = \emptyset \). As for cardinality, \(|A \cap B| \leq \min(|A|, |B|) \), since the intersection can't have more elements than either set. In Example 22, \(|A| = 3 \), \(|B| = 2 \), and \(|A \cap B| = |\lbrace 3\rbrace| = 1 \), which is less than both!"</p>
+</blockquote>
+<p><strong>[Venn Diagram Placeholder: Show two non-overlapping circles for \(A = \lbrace 1, 2\rbrace \), \(B = \lbrace 3, 4\rbrace \). No shaded overlap, indicating \(A \cap B = \emptyset \).]</strong></p>
+<hr />
+<h3 id="63-difference-"><a class="header" href="#63-difference-">6.3 Difference (−)</a></h3>
+<p>The <strong>difference</strong> of sets \(A \)and \(B \), written \(A - B \), is the set of elements in \(A \)but not in \(B \). It's like keeping only the treasures unique to \(A \)'s chest, tossing out anything \(B \)has.</p>
+<ul>
+<li>
+<p><strong>Example 25</strong>: Let \(A = \lbrace 1, 2, 3\rbrace \), \(B = \lbrace 3, 4, 5\rbrace \), with \(U = \lbrace 1, 2, \ldots, 10\rbrace \).<br />
+\(A - B = \lbrace 1, 2\rbrace \).<br />
+<strong>[Venn Diagram Placeholder: Show two overlapping circles, one for \(A \)with 1, 2, 3, one for \(B \)with 3, 4, 5. Shade only the part of \(A \)'s circle not overlapping \(B \)to represent \(A - B \).]</strong></p>
+</li>
+<li>
+<p><strong>Example 26</strong>: Let \(A = \lbrace a, b, c\rbrace \), \(B = \lbrace c, d\rbrace \), with \(U = \lbrace a, b, c, d, e\rbrace \).<br />
+\(A - B = \lbrace a, b\rbrace \).<br />
+<strong>[Venn Diagram Placeholder: Show \(A \)'s circle with a, b, c, \(B \)'s with c, d, overlapping at c. Shade \(A \)'s non-overlapping part for \(A - B \).]</strong></p>
+</li>
+<li>
+<p><strong>Example 27</strong>: Let \(A = \lbrace \text{Ace of Spades}, \text{King of Spades}\rbrace \), \(B = \lbrace \text{King of Spades}, \text{King of Hearts}\rbrace \), with \(U = \lbrace \text{Ace of Spades}, \text{King of Spades}, \text{Ace of Hearts}, \text{King of Hearts}\rbrace \).<br />
+\(A - B = \lbrace \text{Ace of Spades}\rbrace \).<br />
+<strong>[Venn Diagram Placeholder: Show circles overlapping at King of Spades, with \(A \)holding Ace of Spades, King of Spades, and \(B \)holding King of Spades, King of Hearts. Shade \(A \)'s non-overlapping part for \(A - B \).]</strong></p>
+</li>
+</ul>
+<blockquote>
+<p><strong>Ares scratches his head.</strong><br />
+"Wait, Athena, is \(A - B \)the same as \(B - A \)? And what's its size?"<br />
+<strong>Athena replies.</strong><br />
+"Good catch, Ares! Generally, \(A - B \neq B - A \), because \(A - B \)keeps what's only in \(A \), while \(B - A \)keeps what's only in \(B \). For Example 25, \(A - B = \lbrace 1, 2\rbrace \), but \(B - A = \lbrace 4, 5\rbrace \). For cardinality, \(|A - B| \leq |A| \), since you're removing elements from \(A \). In Example 25, \(|A| = 3 \), \(|A - B| = 2 \)."</p>
+</blockquote>
+<hr />
+<h3 id="64-cartesian-product-"><a class="header" href="#64-cartesian-product-">6.4 Cartesian Product (×)</a></h3>
+<p>The <strong>Cartesian product</strong> of sets \(A \)and \(B \), written \(A \times B \), is the set of all ordered pairs \((a, b) \), where \(a \in A \)and \(b \in B \). It's like pairing every item from \(A \)'s chest with every item from \(B \)'s, creating a new kind of treasure map.</p>
+<ul>
+<li>
+<p><strong>Example 28</strong>: Let \(A = \lbrace 1, 2\rbrace \), \(B = \lbrace x, y\rbrace \).<br />
+\(A \times B = \lbrace (1, x), (1, y), (2, x), (2, y)\rbrace \).<br />
+<strong>Note</strong>: No Venn diagram here, as Cartesian products are best visualized as a grid or list, not circles.</p>
+</li>
+<li>
+<p><strong>Example 29</strong>: Let \(A = \lbrace \text{red}, \text{blue}\rbrace \), \(B = \lbrace \text{hat}, \text{scarf}\rbrace \).<br />
+\(A \times B = \lbrace (\text{red}, \text{hat}), (\text{red}, \text{scarf}), (\text{blue}, \text{hat}), (\text{blue}, \text{scarf})\rbrace \).<br />
+<strong>Note</strong>: Think of pairing colors with accessories—every combination counts!</p>
+</li>
+<li>
+<p><strong>Example 30</strong>: Let \(A = \lbrace a\rbrace \), \(B = \emptyset \).<br />
+\(A \times B = \emptyset \), since no pairs can be formed with an empty set.<br />
+<strong>Note</strong>: The Cartesian product needs elements in both sets to produce pairs.</p>
+</li>
+</ul>
+<blockquote>
+<p><strong>Hermes tilts his head.</strong><br />
+"Athena, how big is this product? And does order matter?"<br />
+<strong>Athena grins.</strong><br />
+"Excellent, Hermes! The cardinality of \(A \times B \)is \(|A \times B| = |A| \cdot |B| \), because you pair each of \(|A| \)elements with each of \(|B| \). In Example 28, \(|A| = 2 \), \(|B| = 2 \), so \(|A \times B| = 2 \cdot 2 = 4 \). And yes, order matters: \(A \times B \neq B \times A \), since \((a, b) \neq (b, a) \). For example, \((1, x) \neq (x, 1) \)."</p>
+</blockquote>
+<hr />
+<h3 id="comprehensive-exercises-set-operations"><a class="header" href="#comprehensive-exercises-set-operations">Comprehensive Exercises: Set Operations</a></h3>
+<p><strong>Athena claps her hands.</strong><br />
+"Time to test your set operation skills! These challenges mix union, intersection, difference, and Cartesian product to see how well you can navigate the playground. Grab your Venn diagrams and let's dive in!"</p>
+<ol>
+<li>
+<p><strong>Basic Operations</strong><br />
+Let \(U = \lbrace 1, 2, 3, 4, 5, 6\rbrace \), \(A = \lbrace 1, 2, 3\rbrace \), \(B = \lbrace 2, 4, 6\rbrace \).<br />
+a) Find \(A \cup B \), \(A \cap B \), \(A - B \), and \(B - A \).<br />
+b) Compute \(|A \cup B| \)using the inclusion-exclusion formula. Verify by listing elements.<br />
+c) Draw a Venn diagram showing \(A \), \(B \), and shade \(A \cap B \).</p>
+</li>
+<li>
+<p><strong>Complement and Difference</strong><br />
+Let \(U = \lbrace a, b, c, d, e\rbrace \), \(A = \lbrace a, b\rbrace \), \(B = \lbrace b, c, d\rbrace \).<br />
+a) Find \(A^c \), \(B^c \), and \(A - B \).<br />
+b) Is \(A - B = A \cap B^c \)? Explain why or why not.<br />
+c) Draw a Venn diagram and shade \(A - B \).</p>
+</li>
+<li>
+<p><strong>Cartesian Product Practice</strong><br />
+Let \(A = \lbrace x, y\rbrace \), \(B = \lbrace 1, 2, 3\rbrace \).<br />
+a) List all elements of \(A \times B \)and \(B \times A \).<br />
+b) Compute \(|A \times B| \)and \(|B \times A| \). Are they equal?<br />
+c) If \(C = \emptyset \), what is \(A \times C \)? Why?</p>
+</li>
+<li>
+<p><strong>Real-World Scenario</strong><br />
+Imagine \(U \)= All books in a library, \(A \)= Books in the mystery genre, \(B \)= Books in hardcover.<br />
+a) Describe in words: \(A \cup B \), \(A \cap B \), \(A - B \), \(B^c \).<br />
+b) If a book is in \(A \cap B \), what can you say about it?<br />
+c) Suggest a universal set and draw a Venn diagram showing \(A \)and \(B \).</p>
+</li>
+<li>
+<p><strong>Venn Diagram Challenge</strong><br />
+Given \(U = \lbrace 1, 2, \ldots, 8\rbrace \), \(A = \lbrace 1, 3, 5, 7\rbrace \), \(B = \lbrace 2, 3, 4, 5\rbrace \):<br />
+a) Find \(A \cup B \), \(A \cap B \), \(A - B \), and \(A^c \).<br />
+b) Draw a Venn diagram and shade the region for \((A \cup B) - (A \cap B) \).<br />
+c) What is the cardinality of the shaded region? Show your work.</p>
+</li>
+<li>
+<p><strong>Mix and Match</strong><br />
+Let \(U = \lbrace p, q, r, s, t\rbrace \), \(A = \lbrace p, q, r\rbrace \), \(B = \lbrace q, s\rbrace \).<br />
+a) Compute \(A \cup B \), \(A \cap B \), \(A - B \), \(B^c \), and \(A \times B \).<br />
+b) Verify: Is \(|A \cup B| = |A| + |B| - |A \cap B| \)?<br />
+c) If \(C = \lbrace r, s\rbrace \), find \(A \cap (B \cup C) \). Draw a Venn diagram to check.</p>
+</li>
+<li>
+<p><strong>Create Your Own</strong><br />
+Design a universal set \(U \)with 6–8 elements and two sets \(A \), \(B \).<br />
+a) Compute \(A \cup B \), \(A \cap B \), \(A - B \), and \(A \times B \).<br />
+b) Draw a Venn diagram showing \(A \cup B \).<br />
+c) Share with a classmate—do your operations match?</p>
+</li>
+</ol>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../0-introduction.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../01-Preliminaries/02-preliminaries_number_theory.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../0-introduction.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../01-Preliminaries/02-preliminaries_number_theory.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>
