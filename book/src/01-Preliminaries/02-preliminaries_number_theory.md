@@ -1,207 +1,460 @@
+# When the Gods Split Numbers: A Tale of Division and Primal Power
 
-### Chapter 1 (Continued): Preliminaries
+Last time, we explored sets like natural numbers \\(\mathbb{N}\\), integers \\(\mathbb{Z}\\), rationals \\(\mathbb{Q}\\), and reals \\(\mathbb{R}\\). Now, let's find the perfect set for cryptography—a set where numbers follow strict rules, keeping our computations safe. 
 
-#### Number Theory: From Counting to Crypto
+This property, called closure, means operations like adding or multiplying stay inside the set, like moves on a secure chessboard. In cryptography, we define a set and prove our secrets are safe as long as we stay within it. If a computation jumps out, we risk exposing vulnerabilities—our secrets could leak!
 
-Last time, we played with sets as math’s LEGO bricks. Now, we zoom into numbers—specifically \\(\mathbb{N}\\) (natural numbers) and \\(\mathbb{Z}\\) (integers)—and start messing with them. With Athena’s wisdom, Chad’s dares, and Hermes’ tricks, we’ll uncover why number theory is crypto’s secret weapon. Let’s keep it chill and throw in some SageMath to see it pop!
+Let's start with the natural numbers, \\(\mathbb{N} = \lbrace 1, 2, \ldots\rbrace\\). Start at 5 and add 4 repeatedly:
+\\[5 \to 5 + 4 = 9 \to 9 + 4 = 13 \to 13 + 4 = 17 \to \ldots \\]
+Each result \\(9, 13, 17, \ldots\\) is in \\(\mathbb{N}\\). Addition is closed—safe so far!
 
-
-##### Arithmetic in \\(\mathbb{N}\\) and \\(\mathbb{Z}\\): Why + and - Are Chill
-
-Let’s kick off with **arithmetic**—\\(+, -, \times, \div\\). You’ve known these since sandbox days, but here’s the cryptographer’s spin:
-
-- **Addition**: \\(a + b \in \mathbb{Z}\\). No drama—always stays in \\(\mathbb{Z}\\).
-- **Subtraction**: \\(a - b \in \mathbb{Z}\\). Works too (in \\(\mathbb{Z}\\), not \\(\mathbb{N}\\)—no negatives there!).
-- **Multiplication**: \\(a \times b \in \mathbb{Z}\\). Grows fast, but still cozy in \\(\mathbb{Z}\\).
-- **Division**: Not so clean. \\(7 \div 3 = 2.333\dots \notin \mathbb{Z}\\). Leftovers? Messy!
-
-> **Athena Notes**: “By the wisdom of Olympus, crypto loves operations that stay in the set. \\(\mathbb{Z}\\) is our playground—but multiplication? That’s where the magic sparks!”
-
-###### Why Multiplication is Crypto’s Best Friend
-- It’s repeated addition—builds structure.
-- It’s a one-way street—multiplying is easy, factoring is *hard*.
-- It shifts gears in different sets—sometimes reversible, sometimes a lock.
-
-
-##### Rational Numbers \\(\mathbb{Q}\\): Smooth, But Too Smooth for Security
-
-Allow division, and you’re in \\(\mathbb{Q}\\)—fractions galore. Here, you can divide anything (except by 0). It’s slick math, but crypto says “nah”:
-
-- Too continuous—no edges to grip.
-- Too predictable—no surprises.
-- No wrapping structure—boring!
-
-> **Hermes Whispers**: “Let’s use \\(\mathbb{Q}\\) and divide by \\(\pi\\) for chaos!”
+> Hermes claps: `Natural numbers are crypto-ready, right!`
 >
-> **Athena Replies**: “Nice try, trickster. Chaos breaks security—crypto needs control, not infinity!”
+> Athena: `Not yet, Hermes! Try subtraction. Start at 23, subtract 7 each time:`
+\\[23 \to 23 - 7 = 16 \to 16 - 7 = 9 \to 9 - 7 = 2 \to 2 - 7 = -5\\]
+>`Danger,! -5 isn't in` \\(\mathbb{N}\\)`! Subtraction breaks closure—we've jumped out of the set, risking our secret!`
 
 
-##### The Division Theorem (a.k.a. Division Algorithm)
+To fix this, let's try a bigger set: the integers, \\(\mathbb{Z} = \lbrace \ldots, -2, -1, 0, 1, 2, \ldots\rbrace\\). 
 
-Back to integers—division’s messy, but predictable. Here’s the golden rule:
+Start at 6:
+- Addition: \\(6 \to 6 + 5 = 11 \to 11 + 5 = 16 \to \ldots\\) Integers—safe!
+- Subtraction: \\(6 \to 6 - 5 = 1 \to 1 - 5 = -4 \to \ldots\\) Integers—safe!
+- Multiplication: \\(6 \to 6 \cdot 5 = 30 \to 30 \cdot 5 = 150 \to \ldots\\) Integers—safe!
+- Division: \\(6 \to 6 \div 2 = 3 \to 3 \div 2 = 1.5\\)
 
-> For any integer \\(a\\) and positive integer \\(b > 0\\), there are unique integers \\(q\\) (quotient) and \\(r\\) (remainder) such that:
+> Hermes whispers. `Trouble in paradise! 1.5 isn't in` \\(\mathbb{Z}\\)`! What about` \\(\mathbb{Q}\\)—`it's got fractions!`
+
+Yes! Division's tricky in \\(\mathbb{Z}\\), and using \\(\mathbb{Q}\\) seems a nice try, it's closed for addition, subtraction, multiplication, and division (except by zero) but \\(\mathbb{Q}\\) has its own issues. , for example, fractions like \\(1.5\\) or \\(\frac 2 3\\) are messy to compute precisely. Also:
+- Too many, too continuse,! Here's why \\(\mathbb{Q}\\) fails crypto:”
+- Too complex: Fractions require arbitrary precision, slowing computations.
+- Not finite: Cryptography needs compact sets for keys, not infinite rationals.
+- Messy structure: \\(\mathbb{Q}\\) lacks the discrete clarity of \\(\mathbb{Z}\\) for modular systems.
+We'll soon see modular arithmetic's finite sets—crypto's true home! 
+
+Athena conclude: Integers \\(\mathbb{Z}\\) are our crypto champions! Closed for addition, subtraction, and multiplication, they offer a structured playground. Division's hiccups? They lead us to modular arithmetic, where we wrap numbers like a clock, keeping everything discrete. Unlike fractions or reals, integers' clear, countable nature ensures precision and security—cryptography's must-haves.
+
+
+### What About Division?
+
+Now, let's tackle **division**—it's trickier than the others. Division doesn't always play nice in \\(\mathbb{Z}\\). Let's start with a simple case. Suppose we divide 6 by 3:  
+
+ \\(6 = 2 \cdot 3\\), so \\(6 \div 3 = 2\\)—an integer. Perfect!  
+ But try dividing 6 by 5? Nope.  
+ \\(6 \div 5 = 1.2\\), and 1.2 is **not** an integer.  
+ Some pairs work smoothly, others don't.”
+
+This brings us to a key idea: **divisibility**.
+
+#### **🟩 Definition: Divisibility**
+
+An integer \\(a\\) **divides** an integer \\(b\\), written \\(a \mid b\\), if there's an integer \\(k\\) such that:
+\\[b = a \cdot k\\]
+If no such \\(k\\) exists, we write \\(a \nmid b\\).
+
+- Example: \\(3 \mid 6\\), because \\(6 = 3 \cdot 2\\)  
+- But \\(5 \nmid 6\\), since no integer \\(k\\) satisfies \\(6 = 5 \cdot k\\)
+
+### **Division With Remainders**
+
+Now, what happens when division **isn't exact**—like dividing 7 by 4?
+
+
+> Try \\(7 \div 4\\). We can write:  
+> \\[> 7 = 1 \cdot 4 + 3> \\]  
+> where 1 is the quotient, and 3 is the remainder—what's left after taking out 4 once.
+
+Could we also write:
+\\[
+7 = 0 \cdot 4 + 7 \quad \text\lbrace or\rbrace \quad 7 = 2 \cdot 4 - 1?
+\\]
+Yes, mathematically, they're valid. But **when we talk about division with remainder**, we want the remainder to be:
+- **what's left** after subtracting as many full 4s as we can
+- and it must be **less than the divisor**
+
+So, by repeatedly subtracting 4 from 7:
+\\[
+7 - 4 = 3 \quad \text\lbrace (and we stop)\rbrace
+\\]
+We're left with 3. So the correct remainder is 3:
+\\[
+7 = 1 \cdot 4 + 3
+\\]
+
+> ✅ **Important:**  
+> The **remainder should always be less than the divisor**.
+
+
+> **Hermes tilts his head:**  `So, division's messy because remainders pop up?`
 >
-> \[ a = b \cdot q + r \quad \text{where } 0 \leq r < b \]
+> **Athena nods:**  `Exactly! In \\(\mathbb{Z}\\), division gives integers **only when** one number divides another exactly. Otherwise, we get fractions, like \\(7 \div 4 = 1.75\\), which kicks us **out of \\(\mathbb{Z}\\)**.This lack of closure under division is one reason we turn to **modular arithmetic** in cryptography—it **wraps remainders** into a neat, secure system.
 
-- **Example**: \\(23 \div 5\\):
-  - \\(23 = 5 \cdot 4 + 3\\) → \\(q = 4\\), \\(r = 3\\).
-- **Negative Twist**: \\(-7 \div 3\\):
-  - \\(-7 = 3 \cdot (-3) + 2\\) → \\(q = -3\\), \\(r = 2\\).
 
-This is the launchpad for **modular arithmetic**—crypto’s everything!
+### **Another Example: 11 Divided by 4**
 
-###### SageMath Spotlight: Division in Action
-Check it with SageMath:
+\\[
+11 = 2 \cdot 4 + 3
+\\]
 
-```python
-a = 23
-b = 5
-q = a // b  # Integer quotient
-r = a % b   # Remainder
-print(f"{a} = {b} * {q} + {r}")  # Prints: 23 = 5 * 4 + 3
+- 2 is the **quotient**
+- 3 is the **remainder**, since \\(11 - 2 \cdot 4 = 3\\), and \\(3 < 4\\)
 
-# Negative test
-a = -7
-b = 3
-q = a // b
-r = a % b
-print(f"{a} = {b} * {q} + {r}")  # Prints: -7 = 3 * -3 + 2
-```
+Even though we could write:
+\\[
+11 = 1 \cdot 4 + 7
+\\]
+that **7 is not a valid remainder**, because it's **not less than** 4.
 
-> **Athena Says**: “This remainder \\(r\\) is your modulo ticket—crypto hides secrets in those leftovers!”
+This idea brings us to one of the **foundational theorems in mathematics**.
 
----
+> **📜 Theorem: Division Theorem** 
+> For any integer \\(n\\), and any **positive integer** \\(d\\), there exist **unique integers** \\(q\\) (the quotient) and \\(r\\) (the remainder) such that:
+\\[
+n = q \cdot d + r \quad \text\lbrace with\rbrace \quad 0 \leq r < d
+\\]
 
-##### Factorization & Prime Numbers: The Hard Problem
+This theorem guarantees:
+- **Existence** of a quotient and remainder
+- **Uniqueness** of that pair \\((q, r)\\) for a given \\(n\\) and \\(d\\)
 
-A **factor** divides a number cleanly:
-- \\(6\\)’s factors: \\(1, 2, 3, 6\\).
-- **Prime**: Only divisible by 1 and itself—\\(2, 3, 5, 7, 11, \dots\\).
+It's not just useful—it's foundational to the **modular systems** cryptography is built on.
 
-Why primes rule:
-- They’re multiplication’s “atoms.”
-- Every number splits into primes uniquely (e.g., \\(12 = 2^2 \cdot 3\\)).
-- Factoring big numbers (like 2048-bit RSA keys)? Super hard!
+Now that we've mastered **divisibility**, let's explore deeper properties of numbers—starting with their **divisors**. Let's count how many **positive divisors** a number has. We'll use the notation \\(d(n)\\) to represent the **number of positive divisors** of a number \\(n\\).”
 
-> **Hermes Whispers**: “Fast to multiply, slow to un-multiply—that’s the trapdoor magic!”
 
----
+### 🟩 Challenge yourself: Define \\(d(n)\\) Using Set Theory
 
-##### GCD: Greatest Common Divisor
+Let:
+\\[
+D_n = \\lbrace  a \in \mathbb{Z} \mid a > 0 \text\lbrace  and \rbrace \exists b \in \mathbb{Z} \text\lbrace  such that \rbrace n = a \cdot b \\rbrace
+\\]
+Then:
+\\[
+d(n) = |D_n|
+\\]
 
-- \\(\gcd(a, b)\\): Biggest number dividing both \\(a\\) and \\(b\\).
-- \\(\gcd(24, 36) = 12\\).
-- \\(\gcd(a, b) = 1\\) → \\(a\\) and \\(b\\) are **coprime** (no common factors but 1).
+Let's look at some examples:
 
-###### Euclidean Algorithm (for GCD)
-Fast trick:
-\[ \gcd(a, b) = \gcd(b, a \mod b) \]
-Repeat until \\(b = 0\\).
+- **Divisors of 12:**  
+  \\[
+  \\lbrace 1, 2, 3, 4, 6, 12\\rbrace \Rightarrow d(12) = 6
+  \\]
 
-- **Example**: \\(\gcd(48, 18)\\):
-  - \\(48 \mod 18 = 12\\)
-  - \\(18 \mod 12 = 6\\)
-  - \\(12 \mod 6 = 0\\) → Done! \\(\gcd = 6\\).
-
----
-
-##### LCM: Least Common Multiple
-
-- Smallest number both \\(a\\) and \\(b\\) divide into.
-- Formula: \[ \text{lcm}(a, b) = \frac{|a \cdot b|}{\gcd(a, b)} \]
-- \\(\text{lcm}(12, 18) = \frac{12 \cdot 18}{6} = 36\\).
-
-###### SageMath Bonus: GCD and LCM
-Try this:
-
-```python
-a = 48
-b = 18
-g = gcd(a, b)
-l = lcm(a, b)
-print(f"GCD of {a} and {b}: {g}")  # Prints: GCD of 48 and 18: 6
-print(f"LCM of {a} and {b}: {l}")  # Prints: LCM of 48 and 18: 36
-```
-
----
-
-##### From Infinite to Finite: Why Cryptography Needs Boundaries
-
-\\(\mathbb{Z}\\) and \\(\mathbb{Q}\\) go on forever—cool, but impractical:
-- Computers can’t handle infinity.
-- Security needs big, *finite* spaces.
-- We want arithmetic that loops, not sprawls.
-
-###### Why Finite = Secure?
-Finite sets create:
-- **Easy forward**: \\(a \times b \mod n\\).
-- **Hard reverse**: Factor \\(n\\) or solve discrete logs.
-This *asymmetry* powers public-key crypto!
-
-> **Hermes Breaks Infinity**: “Let’s use real numbers! Divide a key by \\(\pi\\) for total chaos!”
->
-> **Athena (sternly)**: “No chaos in crypto, trickster. Precision breaks with \\(\pi\\)—security needs finite control.”
->
-> **Chad**: “So we slice infinity into finite chunks? Epic move!”
->
-> **Athena**: “Exactly. Finite fields are controlled universes—elegant and tough.”
-
----
-
-##### Welcome to Modular Arithmetic
-
-Using the Division Theorem, we carve \\(\mathbb{Z}\\) into finite sets:
-- **\\(\mathbb{Z}_n\\)**: \\(\{0, 1, 2, \dots, n-1\}\\).
-- Add, subtract, multiply—then take \\(\mod n\\) to loop back.
-
-- **In \\(\mathbb{Z}_5\\)**:
-  - \\(3 + 4 = 7 \equiv 2 \pmod{5}\\).
-  - \\(2 \times 4 = 8 \equiv 3 \pmod{5}\\).
-  - \\(-1 \equiv 4 \pmod{5}\\).
-
-> **Athena Notes**: “It’s clock math—hit the max, wrap around. This is the backbone of encryption and hashing!”
-
-###### SageMath Wrap-Around
-See \\(\mathbb{Z}_5\\) loop:
-
-```python
-n = 5
-for i in range(10):
-    r = mod(i, n)
-    print(f"{i} mod {n} = {r}")  # Prints: 0, 1, 2, 3, 4, 0, 1, 2, 3, 4
-```
-
----
-
-##### 🔍 Quick Practice: Which Numbers Are in \\(\mathbb{Z}_7\\)?
-
-Which belong to \\(\mathbb{Z}_7\\)?
-a) 3  
-b) 11  
-c) -2  
-d) 15
-
-> **Chad Challenges**: “Bet you can’t crack this in ten seconds!”
->
-> *Answers*:
-> - a) 3 → ✅ (in range)
-> - b) 11 \\(\equiv 4 \pmod{7}\\) → ✅
-> - c) -2 \\(\equiv 5 \pmod{7}\\) → ✅
-> - d) 15 \\(\equiv 1 \pmod{7}\\) → ✅
-
----
-
-##### 🔢 Modular Arithmetic Wrap-Around
-
-A peek at \\(\mathbb{Z}_5\\):
-
-```
-ℤ:   ... -2 -1  0  1  2  3  4  5  6  7  8 ...
-ℤ₅:            [0][1][2][3][4][0][1][2][3]...
-```
+- **Divisors of 15:**  
+  \\[
+  \\lbrace 1, 3, 5, 15\\rbrace \Rightarrow d(15) = 4
+  \\]
 
 
 
-Next up: diving deeper into \\(\mathbb{Z}_n\\), modular inverses, and finite fields—crypto’s playground!
+> **Hermes jumps up, eyes wide:**  
+> This reminds me of set theory! Divisors seem to pair up like subsets:  
+> - For 6 → \\((1,6), (2,3)\\)  
+> - For 15 → \\((1,15), (3,5)\\)  
+> So maybe \\(d(n)\\) is always even!”
 
+
+
+> **Athena raises an eyebrow:**  
+> Interesting, Hermes. But let's test a few more before jumping to conclusions.”
+
+
+
+Try:
+
+- \\(d(4) = 3\\) from \\(\\lbrace 1, 2, 4\\rbrace\\)
+- \\(d(9) = 3\\) from \\(\\lbrace 1, 3, 9\\rbrace\\)
+
+These are **odd**! The reason? These are **perfect squares**, and the square root counts only once as a divisor (e.g., \\(2 \cdot 2 = 4\\)).
+
+
+
+Now let's test numbers with exactly **two** divisors:
+
+- \\(d(5) = 2\\): \\(\\lbrace 1, 5\\rbrace\\)  
+- \\(d(7) = 2\\): \\(\\lbrace 1, 7\\rbrace\\)  
+- \\(d(11) = 2\\): \\(\\lbrace 1, 11\\rbrace\\)
+
+These are **prime numbers**.
+
+
+### 🧠 Definitions: Prime and Composite Numbers
+
+- A **prime number** is an integer \\(> 1\\) with exactly **two** positive divisors.
+- A **composite number** has **more than two** divisors.
+
+
+
+> **Athena concludes:**  
+> Primes are the **building blocks** of the integers—and the backbone of cryptography. Primes lock secrets, and composites—especially large ones—are the keys to hiding them.”
+
+
+## 🔐 GCD, LCM, Co-Primes & Algorithms That Power Privacy
+
+With **divisors and primes** in our toolkit, we're ready to unlock more number-theoretic treasures—concepts that directly power cryptographic systems:  
+- **Greatest Common Divisor (GCD)**  
+- **Least Common Multiple (LCM)**  
+- **Co-prime numbers**  
+- **Euclidean Algorithm & Extended Euclidean Algorithm**
+
+
+
+> **Athena holds up two numbers:**  
+> Numbers talk to each other through their divisors. Let's see how they share common ground—and how we can use this structure to protect secrets.”
+
+
+
+### 🧱 Greatest Common Divisor (GCD)
+
+The **greatest common divisor** of two integers \\(a\\) and \\(b\\), not both zero, is the largest positive integer that divides both.
+
+
+
+#### **Example 1: \\(\gcd(12, 18)\\)**
+
+- \\(D_\lbrace 12\rbrace = \\lbrace 1, 2, 3, 4, 6, 12\\rbrace\\)  
+- \\(D_\lbrace 18\rbrace = \\lbrace 1, 2, 3, 6, 9, 18\\rbrace\\)  
+- Common divisors: \\(\\lbrace 1, 2, 3, 6\\rbrace\\)  
+- ✅ So, \\(\gcd(12, 18) = 6\\)
+
+
+
+### 🤝 Co-Prime Numbers
+
+Two integers \\(a\\) and \\(b\\) are called **co-prime** (or **relatively prime**) if:
+\\[
+\gcd(a, b) = 1
+\\]
+
+They share **no common positive divisors** except 1.
+
+
+
+#### **Example 2: Are 15 and 28 co-prime?**
+
+- \\(D_\lbrace 15\rbrace = \\lbrace 1, 3, 5, 15\\rbrace\\)  
+- \\(D_\lbrace 28\rbrace = \\lbrace 1, 2, 4, 7, 14, 28\\rbrace\\)  
+- Common divisors: \\(\\lbrace 1\\rbrace\\)
+
+✅ \\(\gcd(15, 28) = 1\\) → They are **co-prime**.
+
+
+
+#### **Example 3: Are 12 and 9 co-prime?**
+
+- \\(D_\lbrace 12\rbrace = \\lbrace 1, 2, 3, 4, 6, 12\\rbrace\\)  
+- \\(D_\lbrace 9\rbrace = \\lbrace 1, 3, 9\\rbrace\\)  
+- Common divisors: \\(\\lbrace 1, 3\\rbrace\\)
+
+❌ \\(\gcd(12, 9) = 3\\) → Not co-prime.
+
+
+
+### 🔁 Multiples and the Path to LCM
+
+Let's talk about **multiples** of a single number.
+
+> **Athena points to the board:**  
+> While divisors go inward—asking *what divides this number?*—multiples go outward:  
+> *What numbers can we build by multiplying this one?*”
+
+
+
+### 📐 Definition: Multiples of a Number
+
+For a positive integer \\(a\\), the **set of multiples** of \\(a\\) is:
+\\[
+M_a = \\lbrace  a \cdot k \mid k \in \mathbb{N} \\rbrace
+\\]
+
+This set is **infinite** and contains all numbers divisible by \\(a\\).
+
+
+
+#### **Example 4: Multiples of 3 and 4**
+
+\\[
+M_3 = \\lbrace 3, 6, 9, 12, 15, 18, \ldots\\rbrace
+\\]  
+\\[
+M_4 = \\lbrace 4, 8, 12, 16, 20, 24, \ldots\\rbrace
+\\]
+
+✅ First common multiple: **12**  
+This is called the **Least Common Multiple (LCM)**.
+
+
+
+### 📌 Definition: Least Common Multiple (LCM)
+
+For two positive integers \\(a\\) and \\(b\\), the **Least Common Multiple** is the **smallest positive integer divisible by both**:
+\\[
+\text{lcm}(a, b) = \min (M_a \cap M_b)
+\\]
+
+Or more practically:
+\\[
+\text{lcm}(a, b) = \frac{ |a \cdot b|}{\gcd(a, b)}
+\\]
+
+
+
+#### **Example 5: \\(\text{lcm}(3, 4)\\)**
+
+Since \\(\gcd(3, 4) = 1\\):
+\\[
+\text{lcm}(3, 4) = \frac{ 3 \cdot 4}{1\rbrace = 12
+\\]
+
+✅ Check: \\(12 \div 3 = 4\\), \\(12 \div 4 = 3\\)
+
+
+
+> **Hermes scratches his head:**  
+> Athena, how does \\(\text{lcm}(a, b) = \frac{ a \cdot b}{\gcd(a, b)}\\) make sense? It's like a puzzle!”
+
+
+
+> **Athena smiles and explains:**  
+> We know \\(a \cdot b\\) is a common multiple:  
+\\[
+a \cdot b \div a = b, \quad a \cdot b \div b = a
+\\]  
+It works—but it might be more than we need.  
+
+Suppose \\(\gcd(a, b) = d\\). Then:
+\\[
+a = a' \cdot d, \quad b = b' \cdot d
+\\]  
+So:
+\\[
+a \cdot b = (a' \cdot d)(b' \cdot d) = a' \cdot b' \cdot d^2
+\\]
+
+That \\(d^2\\) means we've double-counted the shared factors. To get the LCM, we divide out one \\(d\\):
+\\[
+\text{lcm}(a, b) = \frac{ a \cdot b}{\gcd(a, b)}
+\\]
+One copy of \\(d\\) is enough to cover both sides.”
+
+
+
+#### **Example 6: Let's try \\(a = 6\\), \\(b = 4\\)**
+
+- \\(\gcd(6, 4) = 2\\) → so \\(d = 2\\)  
+- Express:
+  \\[
+  6 = 3 \cdot 2, \quad 4 = 2 \cdot 2
+  \\]
+  So \\(a' = 3\\), \\(b' = 2\\)
+
+Then:
+\\[
+a \cdot b = 6 \cdot 4 = 24, \quad \text{but} \quad \text{lcm}(6, 4) = 3 \cdot 2 \cdot 2 = 12
+\\]
+
+Or use the formula:
+\\[
+\text{lcm}(6, 4) = \frac{ 6 \cdot 4}{2} = \frac{ 24}{2}= 12
+\\]
+
+✅ Check: \\(12 \div 6 = 2\\), \\(12 \div 4 = 3\\)
+
+> **Hermes claps:**  
+> We just kicked out the extra \\(d\\)! That's clean math magic.”
+
+> **Athena nods:**  
+> And it's not just elegant—it's **efficient**. This is why the LCM formula is crucial for syncing systems and encrypting data.”
+
+
+
+### ⚙️ Euclidean Algorithm
+
+An efficient method to compute \\(\gcd(a, b)\\) without listing divisors.
+
+> **Algorithm Steps:**
+1. Divide: \\(a = q \cdot b + r\\)  
+2. Replace: \\(\gcd(a, b) = \gcd(b, r)\\)  
+3. Repeat until the remainder is 0. The last non-zero remainder is \\(\gcd\\)
+
+
+
+#### **Example 7: \\(\gcd(48, 18)\\)**
+
+- \\(48 = 2 \cdot 18 + 12\\) → \\(\gcd(48, 18) = \gcd(18, 12)\\)  
+- \\(18 = 1 \cdot 12 + 6\\) → \\(\gcd(18, 12) = \gcd(12, 6)\\)  
+- \\(12 = 2 \cdot 6 + 0\\) → Stop.
+
+✅ \\(\gcd(48, 18) = 6\\)
+
+> **Hermes blinks:**  
+> It's like a number dance—keep stepping until you stop!”
+
+> **Athena laughs:**  
+> Perfect, Hermes! This ‘dance' makes crypto computations fast.”
+
+
+
+### 🧠 Extended Euclidean Algorithm
+
+We can go further—not just find the GCD, but **express it** as a combination of \\(a\\) and \\(b\\):
+
+> **Bézout's Identity:**  
+Given \\(a, b\\), find \\(x, y \in \mathbb{Z}\\) such that:
+\\[
+a \cdot x + b \cdot y = \gcd(a, b)
+\\]
+
+
+
+#### **Example 8: Extended GCD for 48 and 18**
+
+From earlier steps:
+
+- \\(12 = 48 - 2 \cdot 18\\)  
+- \\(6 = 18 - 1 \cdot 12\\)
+
+Substitute back:
+\\[
+6 = 18 - 1 \cdot (48 - 2 \cdot 18) = 3 \cdot 18 - 1 \cdot 48
+\\]  
+So:
+\\[
+6 = (-1) \cdot 48 + 3 \cdot 18
+\\]
+
+✅ \\(x = -1, y = 3\\)
+
+> **Hermes gasps:**  
+> We're writing the GCD as a combo of 48 and 18? That's magic!”
+
+> **Athena winks:**  
+> It's a powerful trick, Hermes—those coefficients unlock **modular inverses**, essential for decryption.”
+
+
+
+### 🧬 Fundamental Theorem of Arithmetic
+
+> **Theorem:**  
+Every integer \\(n > 1\\) can be written as a product of **prime numbers**, uniquely (up to the order of factors).
+
+
+
+#### **Example 9: Factorize 60**
+
+\\[
+60 = 2 \cdot 30 = 2 \cdot 2 \cdot 15 = 2^2 \cdot 3 \cdot 5
+\\]
+
+
+
+#### **Example 10: Factorize 28**
+
+\\[
+28 = 2 \cdot 14 = 2^2 \cdot 7
+\\]
+
+✅ Try different methods—you'll always get the same **prime "DNA"**!
+
+> **Athena beams:**  
+> This uniqueness is why primes are cryptography's atoms—each number's genetic code securing encryption.”
