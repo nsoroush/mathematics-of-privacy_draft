@@ -90,7 +90,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="../0-introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="../01-Preliminaries/01-preliminaries_set.html"><strong aria-hidden="true">2.</strong> Preliminaries Sets</a></li><li class="chapter-item expanded "><a href="../01-Preliminaries/02-preliminaries_number_theory.html" class="active"><strong aria-hidden="true">3.</strong> Preliminaries Number Theory</a></li><li class="chapter-item expanded "><a href="../02-Group/group_1.html"><strong aria-hidden="true">4.</strong> Groups</a></li><li class="chapter-item expanded "><a href="../cheatsheet.html"><strong aria-hidden="true">5.</strong> CheatSheet</a></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="../0-introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="../01-Preliminaries/01-preliminaries_set.html"><strong aria-hidden="true">2.</strong> Preliminaries Sets</a></li><li class="chapter-item expanded "><a href="../01-Preliminaries/02-preliminaries_number_theory.html" class="active"><strong aria-hidden="true">3.</strong> Preliminaries Number Theory</a></li><li class="chapter-item expanded "><a href="../01-Preliminaries/excercise.html"><strong aria-hidden="true">4.</strong> Examples and Exercises</a></li><li class="chapter-item expanded "><a href="../cheatsheet.html"><strong aria-hidden="true">5.</strong> CheatSheet</a></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
@@ -175,200 +175,376 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h3 id="chapter-1-continued-preliminaries"><a class="header" href="#chapter-1-continued-preliminaries">Chapter 1 (Continued): Preliminaries</a></h3>
-<h4 id="number-theory-from-counting-to-crypto"><a class="header" href="#number-theory-from-counting-to-crypto">Number Theory: From Counting to Crypto</a></h4>
-<p>Last time, we played with sets as math’s LEGO bricks. Now, we zoom into numbers—specifically \(\mathbb{N}\) (natural numbers) and \(\mathbb{Z}\) (integers)—and start messing with them. With Athena’s wisdom, Chad’s dares, and Hermes’ tricks, we’ll uncover why number theory is crypto’s secret weapon. Let’s keep it chill and throw in some SageMath to see it pop!</p>
-<h5 id="arithmetic-in-mathbbn-and-mathbbz-why--and---are-chill"><a class="header" href="#arithmetic-in-mathbbn-and-mathbbz-why--and---are-chill">Arithmetic in \(\mathbb{N}\) and \(\mathbb{Z}\): Why + and - Are Chill</a></h5>
-<p>Let’s kick off with <strong>arithmetic</strong>—\(+, -, \times, \div\). You’ve known these since sandbox days, but here’s the cryptographer’s spin:</p>
+                        <h1 id="when-the-gods-split-numbers-a-tale-of-division-and-primal-power"><a class="header" href="#when-the-gods-split-numbers-a-tale-of-division-and-primal-power">When the Gods Split Numbers: A Tale of Division and Primal Power</a></h1>
+<p>Last time, we explored sets like natural numbers \(\mathbb{N}\), integers \(\mathbb{Z}\), rationals \(\mathbb{Q}\), and reals \(\mathbb{R}\). Now, let's find the perfect set for cryptography—a set where numbers follow strict rules, keeping our computations safe.</p>
+<p>This property, called closure, means operations like adding or multiplying stay inside the set, like moves on a secure chessboard. In cryptography, we define a set and prove our secrets are safe as long as we stay within it. If a computation jumps out, we risk exposing vulnerabilities—our secrets could leak!</p>
+<p>Let's start with the natural numbers, \(\mathbb{N} = \lbrace 1, 2, \ldots\rbrace\). Start at 5 and add 4 repeatedly:
+\[5 \to 5 + 4 = 9 \to 9 + 4 = 13 \to 13 + 4 = 17 \to \ldots \]
+Each result \(9, 13, 17, \ldots\) is in \(\mathbb{N}\). Addition is closed—safe so far!</p>
+<blockquote>
+<p>Hermes claps: <code>Natural numbers are crypto-ready, right!</code></p>
+<p>Athena: <code>Not yet, Hermes! Try subtraction. Start at 23, subtract 7 each time:</code>
+\[23 \to 23 - 7 = 16 \to 16 - 7 = 9 \to 9 - 7 = 2 \to 2 - 7 = -5\]
+<code>Danger,! -5 isn't in</code> \(\mathbb{N}\)<code>! Subtraction breaks closure—we've jumped out of the set, risking our secret!</code></p>
+</blockquote>
+<p>To fix this, let's try a bigger set: the integers, \(\mathbb{Z} = \lbrace \ldots, -2, -1, 0, 1, 2, \ldots\rbrace\).</p>
+<p>Start at 6:</p>
 <ul>
-<li><strong>Addition</strong>: \(a + b \in \mathbb{Z}\). No drama—always stays in \(\mathbb{Z}\).</li>
-<li><strong>Subtraction</strong>: \(a - b \in \mathbb{Z}\). Works too (in \(\mathbb{Z}\), not \(\mathbb{N}\)—no negatives there!).</li>
-<li><strong>Multiplication</strong>: \(a \times b \in \mathbb{Z}\). Grows fast, but still cozy in \(\mathbb{Z}\).</li>
-<li><strong>Division</strong>: Not so clean. \(7 \div 3 = 2.333\dots \notin \mathbb{Z}\). Leftovers? Messy!</li>
+<li>Addition: \(6 \to 6 + 5 = 11 \to 11 + 5 = 16 \to \ldots\) Integers—safe!</li>
+<li>Subtraction: \(6 \to 6 - 5 = 1 \to 1 - 5 = -4 \to \ldots\) Integers—safe!</li>
+<li>Multiplication: \(6 \to 6 \cdot 5 = 30 \to 30 \cdot 5 = 150 \to \ldots\) Integers—safe!</li>
+<li>Division: \(6 \to 6 \div 2 = 3 \to 3 \div 2 = 1.5\)</li>
 </ul>
 <blockquote>
-<p><strong>Athena Notes</strong>: “By the wisdom of Olympus, crypto loves operations that stay in the set. \(\mathbb{Z}\) is our playground—but multiplication? That’s where the magic sparks!”</p>
+<p>Hermes whispers. <code>Trouble in paradise! 1.5 isn't in</code> \(\mathbb{Z}\)<code>! What about</code> \(\mathbb{Q}\)—<code>it's got fractions!</code></p>
 </blockquote>
-<h6 id="why-multiplication-is-cryptos-best-friend"><a class="header" href="#why-multiplication-is-cryptos-best-friend">Why Multiplication is Crypto’s Best Friend</a></h6>
+<p>Yes! Division's tricky in \(\mathbb{Z}\), and using \(\mathbb{Q}\) seems a nice try, it's closed for addition, subtraction, multiplication, and division (except by zero) but \(\mathbb{Q}\) has its own issues. , for example, fractions like \(1.5\) or \(\frac 2 3\) are messy to compute precisely. Also:</p>
 <ul>
-<li>It’s repeated addition—builds structure.</li>
-<li>It’s a one-way street—multiplying is easy, factoring is <em>hard</em>.</li>
-<li>It shifts gears in different sets—sometimes reversible, sometimes a lock.</li>
+<li>Too many, too continuse,! Here's why \(\mathbb{Q}\) fails crypto:”</li>
+<li>Too complex: Fractions require arbitrary precision, slowing computations.</li>
+<li>Not finite: Cryptography needs compact sets for keys, not infinite rationals.</li>
+<li>Messy structure: \(\mathbb{Q}\) lacks the discrete clarity of \(\mathbb{Z}\) for modular systems.
+We'll soon see modular arithmetic's finite sets—crypto's true home!</li>
 </ul>
-<h5 id="rational-numbers-mathbbq-smooth-but-too-smooth-for-security"><a class="header" href="#rational-numbers-mathbbq-smooth-but-too-smooth-for-security">Rational Numbers \(\mathbb{Q}\): Smooth, But Too Smooth for Security</a></h5>
-<p>Allow division, and you’re in \(\mathbb{Q}\)—fractions galore. Here, you can divide anything (except by 0). It’s slick math, but crypto says “nah”:</p>
+<p>Athena conclude: Integers \(\mathbb{Z}\) are our crypto champions! Closed for addition, subtraction, and multiplication, they offer a structured playground. Division's hiccups? They lead us to modular arithmetic, where we wrap numbers like a clock, keeping everything discrete. Unlike fractions or reals, integers' clear, countable nature ensures precision and security—cryptography's must-haves.</p>
+<h3 id="what-about-division"><a class="header" href="#what-about-division">What About Division?</a></h3>
+<p>Now, let's tackle <strong>division</strong>—it's trickier than the others. Division doesn't always play nice in \(\mathbb{Z}\). Let's start with a simple case. Suppose we divide 6 by 3:</p>
+<p>\(6 = 2 \cdot 3\), so \(6 \div 3 = 2\)—an integer. Perfect!<br />
+But try dividing 6 by 5? Nope.<br />
+\(6 \div 5 = 1.2\), and 1.2 is <strong>not</strong> an integer.<br />
+Some pairs work smoothly, others don't.”</p>
+<p>This brings us to a key idea: <strong>divisibility</strong>.</p>
+<h4 id="-definition-divisibility"><a class="header" href="#-definition-divisibility"><strong>🟩 Definition: Divisibility</strong></a></h4>
+<p>An integer \(a\) <strong>divides</strong> an integer \(b\), written \(a \mid b\), if there's an integer \(k\) such that:
+\[b = a \cdot k\]
+If no such \(k\) exists, we write \(a \nmid b\).</p>
 <ul>
-<li>Too continuous—no edges to grip.</li>
-<li>Too predictable—no surprises.</li>
-<li>No wrapping structure—boring!</li>
+<li>Example: \(3 \mid 6\), because \(6 = 3 \cdot 2\)</li>
+<li>But \(5 \nmid 6\), since no integer \(k\) satisfies \(6 = 5 \cdot k\)</li>
 </ul>
+<h3 id="division-with-remainders"><a class="header" href="#division-with-remainders"><strong>Division With Remainders</strong></a></h3>
+<p>Now, what happens when division <strong>isn't exact</strong>—like dividing 7 by 4?</p>
 <blockquote>
-<p><strong>Hermes Whispers</strong>: “Let’s use \(\mathbb{Q}\) and divide by \(\pi\) for chaos!”</p>
-<p><strong>Athena Replies</strong>: “Nice try, trickster. Chaos breaks security—crypto needs control, not infinity!”</p>
+<p>Try \(7 \div 4\). We can write:<br />
+\[&gt; 7 = 1 \cdot 4 + 3&gt; \]<br />
+where 1 is the quotient, and 3 is the remainder—what's left after taking out 4 once.</p>
 </blockquote>
-<h5 id="the-division-theorem-aka-division-algorithm"><a class="header" href="#the-division-theorem-aka-division-algorithm">The Division Theorem (a.k.a. Division Algorithm)</a></h5>
-<p>Back to integers—division’s messy, but predictable. Here’s the golden rule:</p>
+<p>Could we also write:
+\[
+7 = 0 \cdot 4 + 7 \quad \text\lbrace or\rbrace \quad 7 = 2 \cdot 4 - 1?
+\]
+Yes, mathematically, they're valid. But <strong>when we talk about division with remainder</strong>, we want the remainder to be:</p>
+<ul>
+<li><strong>what's left</strong> after subtracting as many full 4s as we can</li>
+<li>and it must be <strong>less than the divisor</strong></li>
+</ul>
+<p>So, by repeatedly subtracting 4 from 7:
+\[
+7 - 4 = 3 \quad \text\lbrace (and we stop)\rbrace
+\]
+We're left with 3. So the correct remainder is 3:
+\[
+7 = 1 \cdot 4 + 3
+\]</p>
 <blockquote>
-<p>For any integer \(a\) and positive integer \(b &gt; 0\), there are unique integers \(q\) (quotient) and \(r\) (remainder) such that:</p>
-<p>[ a = b \cdot q + r \quad \text{where } 0 \leq r &lt; b ]</p>
+<p>✅ <strong>Important:</strong><br />
+The <strong>remainder should always be less than the divisor</strong>.</p>
 </blockquote>
-<ul>
-<li><strong>Example</strong>: \(23 \div 5\):
-<ul>
-<li>\(23 = 5 \cdot 4 + 3\) → \(q = 4\), \(r = 3\).</li>
-</ul>
-</li>
-<li><strong>Negative Twist</strong>: \(-7 \div 3\):
-<ul>
-<li>\(-7 = 3 \cdot (-3) + 2\) → \(q = -3\), \(r = 2\).</li>
-</ul>
-</li>
-</ul>
-<p>This is the launchpad for <strong>modular arithmetic</strong>—crypto’s everything!</p>
-<h6 id="sagemath-spotlight-division-in-action"><a class="header" href="#sagemath-spotlight-division-in-action">SageMath Spotlight: Division in Action</a></h6>
-<p>Check it with SageMath:</p>
-<pre><code class="language-python">a = 23
-b = 5
-q = a // b  # Integer quotient
-r = a % b   # Remainder
-print(f"{a} = {b} * {q} + {r}")  # Prints: 23 = 5 * 4 + 3
-
-# Negative test
-a = -7
-b = 3
-q = a // b
-r = a % b
-print(f"{a} = {b} * {q} + {r}")  # Prints: -7 = 3 * -3 + 2
-</code></pre>
 <blockquote>
-<p><strong>Athena Says</strong>: “This remainder \(r\) is your modulo ticket—crypto hides secrets in those leftovers!”</p>
+<p><strong>Hermes tilts his head:</strong>  <code>So, division's messy because remainders pop up?</code></p>
+<p><strong>Athena nods:</strong>  `Exactly! In \(\mathbb{Z}\), division gives integers <strong>only when</strong> one number divides another exactly. Otherwise, we get fractions, like \(7 \div 4 = 1.75\), which kicks us <strong>out of \(\mathbb{Z}\)</strong>.This lack of closure under division is one reason we turn to <strong>modular arithmetic</strong> in cryptography—it <strong>wraps remainders</strong> into a neat, secure system.</p>
 </blockquote>
-<hr />
-<h5 id="factorization--prime-numbers-the-hard-problem"><a class="header" href="#factorization--prime-numbers-the-hard-problem">Factorization &amp; Prime Numbers: The Hard Problem</a></h5>
-<p>A <strong>factor</strong> divides a number cleanly:</p>
+<h3 id="another-example-11-divided-by-4"><a class="header" href="#another-example-11-divided-by-4"><strong>Another Example: 11 Divided by 4</strong></a></h3>
+<p>\[
+11 = 2 \cdot 4 + 3
+\]</p>
 <ul>
-<li>\(6\)’s factors: \(1, 2, 3, 6\).</li>
-<li><strong>Prime</strong>: Only divisible by 1 and itself—\(2, 3, 5, 7, 11, \dots\).</li>
+<li>2 is the <strong>quotient</strong></li>
+<li>3 is the <strong>remainder</strong>, since \(11 - 2 \cdot 4 = 3\), and \(3 &lt; 4\)</li>
 </ul>
-<p>Why primes rule:</p>
-<ul>
-<li>They’re multiplication’s “atoms.”</li>
-<li>Every number splits into primes uniquely (e.g., \(12 = 2^2 \cdot 3\)).</li>
-<li>Factoring big numbers (like 2048-bit RSA keys)? Super hard!</li>
-</ul>
+<p>Even though we could write:
+\[
+11 = 1 \cdot 4 + 7
+\]
+that <strong>7 is not a valid remainder</strong>, because it's <strong>not less than</strong> 4.</p>
+<p>This idea brings us to one of the <strong>foundational theorems in mathematics</strong>.</p>
 <blockquote>
-<p><strong>Hermes Whispers</strong>: “Fast to multiply, slow to un-multiply—that’s the trapdoor magic!”</p>
+<p><strong>📜 Theorem: Division Theorem</strong>
+For any integer \(n\), and any <strong>positive integer</strong> \(d\), there exist <strong>unique integers</strong> \(q\) (the quotient) and \(r\) (the remainder) such that:
+\[
+n = q \cdot d + r \quad \text\lbrace with\rbrace \quad 0 \leq r &lt; d
+\]</p>
 </blockquote>
-<hr />
-<h5 id="gcd-greatest-common-divisor"><a class="header" href="#gcd-greatest-common-divisor">GCD: Greatest Common Divisor</a></h5>
+<p>This theorem guarantees:</p>
 <ul>
-<li>\(\gcd(a, b)\): Biggest number dividing both \(a\) and \(b\).</li>
-<li>\(\gcd(24, 36) = 12\).</li>
-<li>\(\gcd(a, b) = 1\) → \(a\) and \(b\) are <strong>coprime</strong> (no common factors but 1).</li>
+<li><strong>Existence</strong> of a quotient and remainder</li>
+<li><strong>Uniqueness</strong> of that pair \((q, r)\) for a given \(n\) and \(d\)</li>
 </ul>
-<h6 id="euclidean-algorithm-for-gcd"><a class="header" href="#euclidean-algorithm-for-gcd">Euclidean Algorithm (for GCD)</a></h6>
-<p>Fast trick:
-[ \gcd(a, b) = \gcd(b, a \mod b) ]
-Repeat until \(b = 0\).</p>
-<ul>
-<li><strong>Example</strong>: \(\gcd(48, 18)\):
-<ul>
-<li>\(48 \mod 18 = 12\)</li>
-<li>\(18 \mod 12 = 6\)</li>
-<li>\(12 \mod 6 = 0\) → Done! \(\gcd = 6\).</li>
-</ul>
-</li>
-</ul>
-<hr />
-<h5 id="lcm-least-common-multiple"><a class="header" href="#lcm-least-common-multiple">LCM: Least Common Multiple</a></h5>
-<ul>
-<li>Smallest number both \(a\) and \(b\) divide into.</li>
-<li>Formula: [ \text{lcm}(a, b) = \frac{|a \cdot b|}{\gcd(a, b)} ]</li>
-<li>\(\text{lcm}(12, 18) = \frac{12 \cdot 18}{6} = 36\).</li>
-</ul>
-<h6 id="sagemath-bonus-gcd-and-lcm"><a class="header" href="#sagemath-bonus-gcd-and-lcm">SageMath Bonus: GCD and LCM</a></h6>
-<p>Try this:</p>
-<pre><code class="language-python">a = 48
-b = 18
-g = gcd(a, b)
-l = lcm(a, b)
-print(f"GCD of {a} and {b}: {g}")  # Prints: GCD of 48 and 18: 6
-print(f"LCM of {a} and {b}: {l}")  # Prints: LCM of 48 and 18: 36
-</code></pre>
-<hr />
-<h5 id="from-infinite-to-finite-why-cryptography-needs-boundaries"><a class="header" href="#from-infinite-to-finite-why-cryptography-needs-boundaries">From Infinite to Finite: Why Cryptography Needs Boundaries</a></h5>
-<p>\(\mathbb{Z}\) and \(\mathbb{Q}\) go on forever—cool, but impractical:</p>
-<ul>
-<li>Computers can’t handle infinity.</li>
-<li>Security needs big, <em>finite</em> spaces.</li>
-<li>We want arithmetic that loops, not sprawls.</li>
-</ul>
-<h6 id="why-finite--secure"><a class="header" href="#why-finite--secure">Why Finite = Secure?</a></h6>
-<p>Finite sets create:</p>
-<ul>
-<li><strong>Easy forward</strong>: \(a \times b \mod n\).</li>
-<li><strong>Hard reverse</strong>: Factor \(n\) or solve discrete logs.
-This <em>asymmetry</em> powers public-key crypto!</li>
-</ul>
-<blockquote>
-<p><strong>Hermes Breaks Infinity</strong>: “Let’s use real numbers! Divide a key by \(\pi\) for total chaos!”</p>
-<p><strong>Athena (sternly)</strong>: “No chaos in crypto, trickster. Precision breaks with \(\pi\)—security needs finite control.”</p>
-<p><strong>Chad</strong>: “So we slice infinity into finite chunks? Epic move!”</p>
-<p><strong>Athena</strong>: “Exactly. Finite fields are controlled universes—elegant and tough.”</p>
-</blockquote>
-<hr />
-<h5 id="welcome-to-modular-arithmetic"><a class="header" href="#welcome-to-modular-arithmetic">Welcome to Modular Arithmetic</a></h5>
-<p>Using the Division Theorem, we carve \(\mathbb{Z}\) into finite sets:</p>
+<p>It's not just useful—it's foundational to the <strong>modular systems</strong> cryptography is built on.</p>
+<p>Now that we've mastered <strong>divisibility</strong>, let's explore deeper properties of numbers—starting with their <strong>divisors</strong>. Let's count how many <strong>positive divisors</strong> a number has. We'll use the notation \(d(n)\) to represent the <strong>number of positive divisors</strong> of a number \(n\).”</p>
+<h3 id="-challenge-yourself-define-dn-using-set-theory"><a class="header" href="#-challenge-yourself-define-dn-using-set-theory">🟩 Challenge yourself: Define \(d(n)\) Using Set Theory</a></h3>
+<p>Let:
+\[
+D_n = \lbrace  a \in \mathbb{Z} \mid a &gt; 0 \text\lbrace  and \rbrace \exists b \in \mathbb{Z} \text\lbrace  such that \rbrace n = a \cdot b \rbrace
+\]
+Then:
+\[
+d(n) = |D_n|
+\]</p>
+<p>Let's look at some examples:</p>
 <ul>
 <li>
-<p><strong>\(\mathbb{Z}_n\)</strong>: \({0, 1, 2, \dots, n-1}\).</p>
+<p><strong>Divisors of 12:</strong><br />
+\[
+\lbrace 1, 2, 3, 4, 6, 12\rbrace \Rightarrow d(12) = 6
+\]</p>
 </li>
 <li>
-<p>Add, subtract, multiply—then take \(\mod n\) to loop back.</p>
-</li>
-<li>
-<p><strong>In \(\mathbb{Z}_5\)</strong>:</p>
-<ul>
-<li>\(3 + 4 = 7 \equiv 2 \pmod{5}\).</li>
-<li>\(2 \times 4 = 8 \equiv 3 \pmod{5}\).</li>
-<li>\(-1 \equiv 4 \pmod{5}\).</li>
-</ul>
+<p><strong>Divisors of 15:</strong><br />
+\[
+\lbrace 1, 3, 5, 15\rbrace \Rightarrow d(15) = 4
+\]</p>
 </li>
 </ul>
 <blockquote>
-<p><strong>Athena Notes</strong>: “It’s clock math—hit the max, wrap around. This is the backbone of encryption and hashing!”</p>
-</blockquote>
-<h6 id="sagemath-wrap-around"><a class="header" href="#sagemath-wrap-around">SageMath Wrap-Around</a></h6>
-<p>See \(\mathbb{Z}_5\) loop:</p>
-<pre><code class="language-python">n = 5
-for i in range(10):
-    r = mod(i, n)
-    print(f"{i} mod {n} = {r}")  # Prints: 0, 1, 2, 3, 4, 0, 1, 2, 3, 4
-</code></pre>
-<hr />
-<h5 id="-quick-practice-which-numbers-are-in-mathbbz_7"><a class="header" href="#-quick-practice-which-numbers-are-in-mathbbz_7">🔍 Quick Practice: Which Numbers Are in \(\mathbb{Z}_7\)?</a></h5>
-<p>Which belong to \(\mathbb{Z}_7\)?
-a) 3<br />
-b) 11<br />
-c) -2<br />
-d) 15</p>
-<blockquote>
-<p><strong>Chad Challenges</strong>: “Bet you can’t crack this in ten seconds!”</p>
-<p><em>Answers</em>:</p>
+<p><strong>Hermes jumps up, eyes wide:</strong><br />
+This reminds me of set theory! Divisors seem to pair up like subsets:</p>
 <ul>
-<li>a) 3 → ✅ (in range)</li>
-<li>b) 11 \(\equiv 4 \pmod{7}\) → ✅</li>
-<li>c) -2 \(\equiv 5 \pmod{7}\) → ✅</li>
-<li>d) 15 \(\equiv 1 \pmod{7}\) → ✅</li>
+<li>For 6 → \((1,6), (2,3)\)</li>
+<li>For 15 → \((1,15), (3,5)\)<br />
+So maybe \(d(n)\) is always even!”</li>
 </ul>
 </blockquote>
-<hr />
-<h5 id="-modular-arithmetic-wrap-around"><a class="header" href="#-modular-arithmetic-wrap-around">🔢 Modular Arithmetic Wrap-Around</a></h5>
-<p>A peek at \(\mathbb{Z}_5\):</p>
-<pre><code>ℤ:   ... -2 -1  0  1  2  3  4  5  6  7  8 ...
-ℤ₅:            [0][1][2][3][4][0][1][2][3]...
-</code></pre>
-<p>Next up: diving deeper into \(\mathbb{Z}_n\), modular inverses, and finite fields—crypto’s playground!</p>
+<blockquote>
+<p><strong>Athena raises an eyebrow:</strong><br />
+Interesting, Hermes. But let's test a few more before jumping to conclusions.”</p>
+</blockquote>
+<p>Try:</p>
+<ul>
+<li>\(d(4) = 3\) from \(\lbrace 1, 2, 4\rbrace\)</li>
+<li>\(d(9) = 3\) from \(\lbrace 1, 3, 9\rbrace\)</li>
+</ul>
+<p>These are <strong>odd</strong>! The reason? These are <strong>perfect squares</strong>, and the square root counts only once as a divisor (e.g., \(2 \cdot 2 = 4\)).</p>
+<p>Now let's test numbers with exactly <strong>two</strong> divisors:</p>
+<ul>
+<li>\(d(5) = 2\): \(\lbrace 1, 5\rbrace\)</li>
+<li>\(d(7) = 2\): \(\lbrace 1, 7\rbrace\)</li>
+<li>\(d(11) = 2\): \(\lbrace 1, 11\rbrace\)</li>
+</ul>
+<p>These are <strong>prime numbers</strong>.</p>
+<h3 id="-definitions-prime-and-composite-numbers"><a class="header" href="#-definitions-prime-and-composite-numbers">🧠 Definitions: Prime and Composite Numbers</a></h3>
+<ul>
+<li>A <strong>prime number</strong> is an integer \(&gt; 1\) with exactly <strong>two</strong> positive divisors.</li>
+<li>A <strong>composite number</strong> has <strong>more than two</strong> divisors.</li>
+</ul>
+<blockquote>
+<p><strong>Athena concludes:</strong><br />
+Primes are the <strong>building blocks</strong> of the integers—and the backbone of cryptography. Primes lock secrets, and composites—especially large ones—are the keys to hiding them.”</p>
+</blockquote>
+<h2 id="-gcd-lcm-co-primes--algorithms-that-power-privacy"><a class="header" href="#-gcd-lcm-co-primes--algorithms-that-power-privacy">🔐 GCD, LCM, Co-Primes &amp; Algorithms That Power Privacy</a></h2>
+<p>With <strong>divisors and primes</strong> in our toolkit, we're ready to unlock more number-theoretic treasures—concepts that directly power cryptographic systems:</p>
+<ul>
+<li><strong>Greatest Common Divisor (GCD)</strong></li>
+<li><strong>Least Common Multiple (LCM)</strong></li>
+<li><strong>Co-prime numbers</strong></li>
+<li><strong>Euclidean Algorithm &amp; Extended Euclidean Algorithm</strong></li>
+</ul>
+<blockquote>
+<p><strong>Athena holds up two numbers:</strong><br />
+Numbers talk to each other through their divisors. Let's see how they share common ground—and how we can use this structure to protect secrets.”</p>
+</blockquote>
+<h3 id="-greatest-common-divisor-gcd"><a class="header" href="#-greatest-common-divisor-gcd">🧱 Greatest Common Divisor (GCD)</a></h3>
+<p>The <strong>greatest common divisor</strong> of two integers \(a\) and \(b\), not both zero, is the largest positive integer that divides both.</p>
+<h4 id="example-1-gcd12-18"><a class="header" href="#example-1-gcd12-18"><strong>Example 1: \(\gcd(12, 18)\)</strong></a></h4>
+<ul>
+<li>\(D_\lbrace 12\rbrace = \lbrace 1, 2, 3, 4, 6, 12\rbrace\)</li>
+<li>\(D_\lbrace 18\rbrace = \lbrace 1, 2, 3, 6, 9, 18\rbrace\)</li>
+<li>Common divisors: \(\lbrace 1, 2, 3, 6\rbrace\)</li>
+<li>✅ So, \(\gcd(12, 18) = 6\)</li>
+</ul>
+<h3 id="-co-prime-numbers"><a class="header" href="#-co-prime-numbers">🤝 Co-Prime Numbers</a></h3>
+<p>Two integers \(a\) and \(b\) are called <strong>co-prime</strong> (or <strong>relatively prime</strong>) if:
+\[
+\gcd(a, b) = 1
+\]</p>
+<p>They share <strong>no common positive divisors</strong> except 1.</p>
+<h4 id="example-2-are-15-and-28-co-prime"><a class="header" href="#example-2-are-15-and-28-co-prime"><strong>Example 2: Are 15 and 28 co-prime?</strong></a></h4>
+<ul>
+<li>\(D_\lbrace 15\rbrace = \lbrace 1, 3, 5, 15\rbrace\)</li>
+<li>\(D_\lbrace 28\rbrace = \lbrace 1, 2, 4, 7, 14, 28\rbrace\)</li>
+<li>Common divisors: \(\lbrace 1\rbrace\)</li>
+</ul>
+<p>✅ \(\gcd(15, 28) = 1\) → They are <strong>co-prime</strong>.</p>
+<h4 id="example-3-are-12-and-9-co-prime"><a class="header" href="#example-3-are-12-and-9-co-prime"><strong>Example 3: Are 12 and 9 co-prime?</strong></a></h4>
+<ul>
+<li>\(D_\lbrace 12\rbrace = \lbrace 1, 2, 3, 4, 6, 12\rbrace\)</li>
+<li>\(D_\lbrace 9\rbrace = \lbrace 1, 3, 9\rbrace\)</li>
+<li>Common divisors: \(\lbrace 1, 3\rbrace\)</li>
+</ul>
+<p>❌ \(\gcd(12, 9) = 3\) → Not co-prime.</p>
+<h3 id="-multiples-and-the-path-to-lcm"><a class="header" href="#-multiples-and-the-path-to-lcm">🔁 Multiples and the Path to LCM</a></h3>
+<p>Let's talk about <strong>multiples</strong> of a single number.</p>
+<blockquote>
+<p><strong>Athena points to the board:</strong><br />
+While divisors go inward—asking <em>what divides this number?</em>—multiples go outward:<br />
+<em>What numbers can we build by multiplying this one?</em>”</p>
+</blockquote>
+<h3 id="-definition-multiples-of-a-number"><a class="header" href="#-definition-multiples-of-a-number">📐 Definition: Multiples of a Number</a></h3>
+<p>For a positive integer \(a\), the <strong>set of multiples</strong> of \(a\) is:
+\[
+M_a = \lbrace  a \cdot k \mid k \in \mathbb{N} \rbrace
+\]</p>
+<p>This set is <strong>infinite</strong> and contains all numbers divisible by \(a\).</p>
+<h4 id="example-4-multiples-of-3-and-4"><a class="header" href="#example-4-multiples-of-3-and-4"><strong>Example 4: Multiples of 3 and 4</strong></a></h4>
+<p>\[
+M_3 = \lbrace 3, 6, 9, 12, 15, 18, \ldots\rbrace
+\]<br />
+\[
+M_4 = \lbrace 4, 8, 12, 16, 20, 24, \ldots\rbrace
+\]</p>
+<p>✅ First common multiple: <strong>12</strong><br />
+This is called the <strong>Least Common Multiple (LCM)</strong>.</p>
+<h3 id="-definition-least-common-multiple-lcm"><a class="header" href="#-definition-least-common-multiple-lcm">📌 Definition: Least Common Multiple (LCM)</a></h3>
+<p>For two positive integers \(a\) and \(b\), the <strong>Least Common Multiple</strong> is the <strong>smallest positive integer divisible by both</strong>:
+\[
+\text{lcm}(a, b) = \min (M_a \cap M_b)
+\]</p>
+<p>Or more practically:
+\[
+\text{lcm}(a, b) = \frac{ |a \cdot b|}{\gcd(a, b)}
+\]</p>
+<h4 id="example-5-textlcm3-4"><a class="header" href="#example-5-textlcm3-4"><strong>Example 5: \(\text{lcm}(3, 4)\)</strong></a></h4>
+<p>Since \(\gcd(3, 4) = 1\):
+\[
+\text{lcm}(3, 4) = \frac{ 3 \cdot 4}{1\rbrace = 12
+\]</p>
+<p>✅ Check: \(12 \div 3 = 4\), \(12 \div 4 = 3\)</p>
+<blockquote>
+<p><strong>Hermes scratches his head:</strong><br />
+Athena, how does \(\text{lcm}(a, b) = \frac{ a \cdot b}{\gcd(a, b)}\) make sense? It's like a puzzle!”</p>
+</blockquote>
+<blockquote>
+<p><strong>Athena smiles and explains:</strong><br />
+We know \(a \cdot b\) is a common multiple:<br />
+\[
+a \cdot b \div a = b, \quad a \cdot b \div b = a
+\]<br />
+It works—but it might be more than we need.</p>
+</blockquote>
+<p>Suppose \(\gcd(a, b) = d\). Then:
+\[
+a = a' \cdot d, \quad b = b' \cdot d
+\]<br />
+So:
+\[
+a \cdot b = (a' \cdot d)(b' \cdot d) = a' \cdot b' \cdot d^2
+\]</p>
+<p>That \(d^2\) means we've double-counted the shared factors. To get the LCM, we divide out one \(d\):
+\[
+\text{lcm}(a, b) = \frac{ a \cdot b}{\gcd(a, b)}
+\]
+One copy of \(d\) is enough to cover both sides.”</p>
+<h4 id="example-6-lets-try-a--6-b--4"><a class="header" href="#example-6-lets-try-a--6-b--4"><strong>Example 6: Let's try \(a = 6\), \(b = 4\)</strong></a></h4>
+<ul>
+<li>\(\gcd(6, 4) = 2\) → so \(d = 2\)</li>
+<li>Express:
+\[
+6 = 3 \cdot 2, \quad 4 = 2 \cdot 2
+\]
+So \(a' = 3\), \(b' = 2\)</li>
+</ul>
+<p>Then:
+\[
+a \cdot b = 6 \cdot 4 = 24, \quad \text{but} \quad \text{lcm}(6, 4) = 3 \cdot 2 \cdot 2 = 12
+\]</p>
+<p>Or use the formula:
+\[
+\text{lcm}(6, 4) = \frac{ 6 \cdot 4}{2} = \frac{ 24}{2}= 12
+\]</p>
+<p>✅ Check: \(12 \div 6 = 2\), \(12 \div 4 = 3\)</p>
+<blockquote>
+<p><strong>Hermes claps:</strong><br />
+We just kicked out the extra \(d\)! That's clean math magic.”</p>
+</blockquote>
+<blockquote>
+<p><strong>Athena nods:</strong><br />
+And it's not just elegant—it's <strong>efficient</strong>. This is why the LCM formula is crucial for syncing systems and encrypting data.”</p>
+</blockquote>
+<h3 id="-euclidean-algorithm"><a class="header" href="#-euclidean-algorithm">⚙️ Euclidean Algorithm</a></h3>
+<p>An efficient method to compute \(\gcd(a, b)\) without listing divisors.</p>
+<blockquote>
+<p><strong>Algorithm Steps:</strong></p>
+</blockquote>
+<ol>
+<li>Divide: \(a = q \cdot b + r\)</li>
+<li>Replace: \(\gcd(a, b) = \gcd(b, r)\)</li>
+<li>Repeat until the remainder is 0. The last non-zero remainder is \(\gcd\)</li>
+</ol>
+<h4 id="example-7-gcd48-18"><a class="header" href="#example-7-gcd48-18"><strong>Example 7: \(\gcd(48, 18)\)</strong></a></h4>
+<ul>
+<li>\(48 = 2 \cdot 18 + 12\) → \(\gcd(48, 18) = \gcd(18, 12)\)</li>
+<li>\(18 = 1 \cdot 12 + 6\) → \(\gcd(18, 12) = \gcd(12, 6)\)</li>
+<li>\(12 = 2 \cdot 6 + 0\) → Stop.</li>
+</ul>
+<p>✅ \(\gcd(48, 18) = 6\)</p>
+<blockquote>
+<p><strong>Hermes blinks:</strong><br />
+It's like a number dance—keep stepping until you stop!”</p>
+</blockquote>
+<blockquote>
+<p><strong>Athena laughs:</strong><br />
+Perfect, Hermes! This ‘dance' makes crypto computations fast.”</p>
+</blockquote>
+<h3 id="-extended-euclidean-algorithm"><a class="header" href="#-extended-euclidean-algorithm">🧠 Extended Euclidean Algorithm</a></h3>
+<p>We can go further—not just find the GCD, but <strong>express it</strong> as a combination of \(a\) and \(b\):</p>
+<blockquote>
+<p><strong>Bézout's Identity:</strong><br />
+Given \(a, b\), find \(x, y \in \mathbb{Z}\) such that:
+\[
+a \cdot x + b \cdot y = \gcd(a, b)
+\]</p>
+</blockquote>
+<h4 id="example-8-extended-gcd-for-48-and-18"><a class="header" href="#example-8-extended-gcd-for-48-and-18"><strong>Example 8: Extended GCD for 48 and 18</strong></a></h4>
+<p>From earlier steps:</p>
+<ul>
+<li>\(12 = 48 - 2 \cdot 18\)</li>
+<li>\(6 = 18 - 1 \cdot 12\)</li>
+</ul>
+<p>Substitute back:
+\[
+6 = 18 - 1 \cdot (48 - 2 \cdot 18) = 3 \cdot 18 - 1 \cdot 48
+\]<br />
+So:
+\[
+6 = (-1) \cdot 48 + 3 \cdot 18
+\]</p>
+<p>✅ \(x = -1, y = 3\)</p>
+<blockquote>
+<p><strong>Hermes gasps:</strong><br />
+We're writing the GCD as a combo of 48 and 18? That's magic!”</p>
+</blockquote>
+<blockquote>
+<p><strong>Athena winks:</strong><br />
+It's a powerful trick, Hermes—those coefficients unlock <strong>modular inverses</strong>, essential for decryption.”</p>
+</blockquote>
+<h3 id="-fundamental-theorem-of-arithmetic"><a class="header" href="#-fundamental-theorem-of-arithmetic">🧬 Fundamental Theorem of Arithmetic</a></h3>
+<blockquote>
+<p><strong>Theorem:</strong><br />
+Every integer \(n &gt; 1\) can be written as a product of <strong>prime numbers</strong>, uniquely (up to the order of factors).</p>
+</blockquote>
+<h4 id="example-9-factorize-60"><a class="header" href="#example-9-factorize-60"><strong>Example 9: Factorize 60</strong></a></h4>
+<p>\[
+60 = 2 \cdot 30 = 2 \cdot 2 \cdot 15 = 2^2 \cdot 3 \cdot 5
+\]</p>
+<h4 id="example-10-factorize-28"><a class="header" href="#example-10-factorize-28"><strong>Example 10: Factorize 28</strong></a></h4>
+<p>\[
+28 = 2 \cdot 14 = 2^2 \cdot 7
+\]</p>
+<p>✅ Try different methods—you'll always get the same <strong>prime "DNA"</strong>!</p>
+<blockquote>
+<p><strong>Athena beams:</strong><br />
+This uniqueness is why primes are cryptography's atoms—each number's genetic code securing encryption.”</p>
+</blockquote>
 
                     </main>
 
@@ -378,7 +554,7 @@ d) 15</p>
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next prefetch" href="../02-Group/group_1.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="../01-Preliminaries/excercise.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -392,7 +568,7 @@ d) 15</p>
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next prefetch" href="../02-Group/group_1.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="../01-Preliminaries/excercise.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>
