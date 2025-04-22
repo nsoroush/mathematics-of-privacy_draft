@@ -1,0 +1,502 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Preliminaries Modular Arithmetic - The Math of Privacy</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    </head>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('light')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="../0-introduction.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="../01-Preliminaries/01-preliminaries_set.html"><strong aria-hidden="true">2.</strong> Preliminaries Sets</a></li><li class="chapter-item expanded "><a href="../01-Preliminaries/02-preliminaries_number_theory.html"><strong aria-hidden="true">3.</strong> Preliminaries Number Theory</a></li><li class="chapter-item expanded "><a href="../01-Preliminaries/03_modular_arithmetic.html" class="active"><strong aria-hidden="true">4.</strong> Preliminaries Modular Arithmetic</a></li><li class="chapter-item expanded "><a href="../01-Preliminaries/excercise.html"><strong aria-hidden="true">5.</strong> Examples and Exercises</a></li><li class="chapter-item expanded "><a href="../cheatsheet.html"><strong aria-hidden="true">6.</strong> CheatSheet</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Math of Privacy</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="-modular-arithmetic-the-clockwork-realm-of-cryptography"><a class="header" href="#-modular-arithmetic-the-clockwork-realm-of-cryptography">⚙️ Modular Arithmetic: The Clockwork Realm of Cryptography</a></h1>
+<h2 id="-why-modular-arithmetic"><a class="header" href="#-why-modular-arithmetic">🔐 Why Modular Arithmetic?</a></h2>
+<p>Cryptography requires mathematics that is:</p>
+<ol>
+<li><strong>Finite</strong>: Computers need bounded sets, not infinite ones.</li>
+<li><strong>Efficient</strong>: Operations like encryption must be fast.</li>
+<li><strong>Hard to Reverse</strong>: Without a secret key, reversing operations (e.g., decryption) should be nearly impossible.</li>
+</ol>
+<h3 id="introduction-to-modular-arithmetic"><a class="header" href="#introduction-to-modular-arithmetic">Introduction to Modular Arithmetic</a></h3>
+<blockquote>
+<p><strong>Athena</strong>: We reviewed sets and integers, but the integers (\(\mathbb{Z}\)) are infinite and lack a robust division operation suitable for cryptography. We need a finite, structured system. Let’s dive into modular arithmetic, step by step.</p>
+</blockquote>
+<blockquote>
+<p>One clever way to shrink the infinite integers is to view them through a lens called \(\mathbb{Z}_7\). In this world, we reduce each integer to its remainder when divided by 7, using the modular operation.</p>
+</blockquote>
+<blockquote>
+<p>For example, consider the number 10:
+\[
+10 = 7 \cdot 1 + 3 \quad \Rightarrow \quad 10 \equiv 3 \pmod{7}
+\]
+So, in \(\mathbb{Z}_7\), \(10\) is represented as 3.</p>
+</blockquote>
+<blockquote>
+<p><strong>Chad</strong>: "Okay, cool. What about 17? I can write \(17 = 7 \cdot 2 + 3\), so 17 is 3 in \(\mathbb{Z}_7\), right?"</p>
+</blockquote>
+<blockquote>
+<p><strong>Hermes</strong>: "Hold on! What if I write \(17 = 7 \cdot 1 + 10\)? Does that mean 17 is 10 in \(\mathbb{Z}_7\)? That’s confusing!"</p>
+</blockquote>
+<blockquote>
+<p><strong>Athena</strong>: "Great catch, Hermes! This is where the <strong>Division Theorem</strong> saves us. Let’s recall it:</p>
+</blockquote>
+<blockquote>
+<blockquote>
+<p><strong>Division Theorem</strong>: For any integer \(n\) and positive integer \(m\), there exist unique integers \(q\) (quotient) and \(r\) (remainder) such that:
+\[
+n = m \cdot q + r, \quad 0 \leq r &lt; m
+\]</p>
+</blockquote>
+</blockquote>
+<blockquote>
+<p>This ensures a unique remainder \(r\) between 0 and \(m-1\). For 17 in \(\mathbb{Z}_7\):
+\[
+17 = 7 \cdot 2 + 3 \quad \Rightarrow \quad 17 \equiv 3 \pmod{7}
+\]
+Writing \(17 = 7 \cdot 1 + 10\) violates the theorem because \(r = 10 \geq 7\)."</p>
+</blockquote>
+<blockquote>
+<p><strong>Hermes</strong>: "Got it! So 17 is definitely 3 in \(\mathbb{Z}_7\)."</p>
+</blockquote>
+<blockquote>
+<p><strong>Chad</strong>: "What about negative numbers? Do they work too?"</p>
+</blockquote>
+<blockquote>
+<p><strong>Hermes</strong>: "Absolutely! The quotient \(q\) can be negative, but the remainder \(r\) must be between 0 and 6. Take (-15):
+\[
+-15 = 7 \cdot (-3) + 6 \quad \Rightarrow \quad -15 \equiv 6 \pmod{7}
+\]
+If you try \(-15 = 7 \cdot (-2) + (-1)\), the remainder (-1) is invalid since it’s negative."</p>
+</blockquote>
+<blockquote>
+<p><strong>Chad</strong>: "Nice! And zero is just zero, right? \(0 \mod 7 = 0\). Numbers less than 7 stay the same, like \(1 \equiv 1\), \(2 \equiv 2\). But negatives flip, like:
+\[
+-1 = 7 \cdot (-1) + 6 \quad \Rightarrow \quad -1 \equiv 6 \pmod{7}
+\]
+That’s wild!"</p>
+</blockquote>
+<blockquote>
+<p><strong>Athena</strong>: "You’re catching on fast! Now, let’s formalize this and explore how to operate in this finite world."</p>
+</blockquote>
+<h3 id="modular-arithmetic-when-infinity-meets-the-finite--mathbbz_n-the-magic-circle"><a class="header" href="#modular-arithmetic-when-infinity-meets-the-finite--mathbbz_n-the-magic-circle">Modular Arithmetic: When Infinity Meets the Finite — \(\mathbb{Z}_n\), the Magic Circle</a></h3>
+<p>For a positive integer \(n\), we define the set \(\mathbb{Z}_n\), the <strong>integers modulo \(n\)</strong>, as:
+\[
+\mathbb{Z}_n = {[0], [1], [2], \dots, [n-1]}
+\]
+Each element \([i]\) is an <strong>equivalence class</strong>—a set of integers with the same remainder \(i\) when divided by \(n\). Formally, for integer \(a\):
+\[
+[a] = { \dots, a - 2n, a - n, a, a + n, a + 2n, \dots }
+\]
+In practice, we write \([i]\) as \(i\) for simplicity in \(\mathbb{Z}_n\), so:
+\[
+\mathbb{Z}_n = {0, 1, 2, \dots, n-1}
+\]
+This shorthand avoids confusion, as \(i\) represents the class \([i]\). Let’s illustrate with \(\mathbb{Z}_7\):</p>
+<ul>
+<li>\([0]\): \(\dots, -14, -7, 0, 7, 14, 21, \dots\) (multiples of 7).</li>
+<li>\([1]\): \(\dots, -13, -6, 1, 8, 15, 22, \dots\) (remainder 1).</li>
+<li>\([2]\): \(\dots, -12, -5, 2, 9, 16, 23, \dots\) (remainder 2).</li>
+<li>\([3]\): \(\dots, -11, -4, 3, 10, 17, 24, \dots\) (remainder 3).</li>
+<li>\([4]\): \(\dots, -10, -3, 4, 11, 18, 25, \dots\) (remainder 4).</li>
+<li>\([5]\): \(\dots, -9, -2, 5, 12, 19, 26, \dots\) (remainder 5).</li>
+<li>\([6]\): \(\dots, -8, -1, 6, 13, 20, 27, \dots\) (remainder 6).</li>
+</ul>
+<p><strong>Table of Equivalence Classes in \(\mathbb{Z}_7\)</strong>:
+\[
+\begin{array}{c|ccccccc}
+\text{Remainder} &amp; 0 &amp; 1 &amp; 2 &amp; 3 &amp; 4 &amp; 5 &amp; 6 \
+\hline
+\text{Examples} &amp; \dots, -7, 0, 7, \dots &amp; \dots, -6, 1, 8, \dots &amp; \dots, -5, 2, 9, \dots &amp; \dots, -4, 3, 10, \dots &amp; \dots, -3, 4, 11, \dots &amp; \dots, -2, 5, 12, \dots &amp; \dots, -1, 6, 13, \dots \
+\end{array}
+\]</p>
+<blockquote>
+<p><strong>Athena’s Wisdom</strong>: The division theorem guarantees each integer belongs to exactly one class, making \(\mathbb{Z}_n\) finite with \(n\) elements (0 to \(n-1\)). This finiteness is key for cryptography.</p>
+</blockquote>
+<p><strong>Congruence</strong>: Two integers \(a\) and \(b\) are <strong>congruent modulo \(n\)</strong>, written \(a \equiv b \pmod{n}\), if \(n\) divides \(a - b\):
+\[
+a \equiv b \pmod{n} \quad \Leftrightarrow \quad n \mid (a - b)
+\]
+<strong>Proof</strong>: If \(a \equiv b \pmod{n}\), then:
+\[
+a = n \cdot q_a + r, \quad b = n \cdot q_b + r \quad \Rightarrow \quad a - b = n \cdot q_a + r - (n \cdot q_b + r) = n (q_a - q_b)
+\]
+Thus, \(n \mid (a - b)\). For example, \(19 \equiv 12 \pmod{7}\) since \(19 - 12 = 7\), and \(7 \mid 7\).</p>
+<p>In \(\mathbb{Z}_n\), numbers are “equal” if they share the same remainder, redefining equality for cryptographic operations.</p>
+<h3 id="arithmetic-operations-in-mathbbz_n"><a class="header" href="#arithmetic-operations-in-mathbbz_n">Arithmetic Operations in \(\mathbb{Z}_n\)</a></h3>
+<p>In \(\mathbb{Z}_n\), we perform operations (addition, subtraction, multiplication, division) and reduce the result modulo \(n\). A powerful feature is that we can compute in two equivalent ways:</p>
+<ol>
+<li><strong>Reduce First</strong>: Compute the remainder of each operand modulo \(n\), then perform the operation in \(\mathbb{Z}_n\).</li>
+<li><strong>Operate Then Reduce</strong>: Perform the operation on the original numbers, then reduce modulo \(n\).</li>
+</ol>
+<p>This flexibility simplifies computations, especially with large numbers, and is crucial for efficient cryptographic algorithms. Let’s explore each operation with examples in \(\mathbb{Z}_7\).</p>
+<blockquote>
+<p><strong>Athena’s Wisdom</strong>: Whether you reduce first or operate then reduce, the result is the same—modular arithmetic’s magic ensures consistency!</p>
+</blockquote>
+<h4 id="addition"><a class="header" href="#addition">Addition</a></h4>
+<p>\[
+(a + b) \mod n
+\]
+<strong>Example 1</strong>: Compute \(5 + 4 \mod 7\).</p>
+<ul>
+<li><strong>Reduce First</strong>: \(5 \mod 7 = 5\), \(4 \mod 7 = 4\), then \(5 + 4 = 9 \mod 7 = 2\).</li>
+<li><strong>Add Then Reduce</strong>: \(5 + 4 = 9 \mod 7 = 2\).</li>
+</ul>
+<p><strong>Example 2</strong>: Compute \(12 + 19 \mod 7\).</p>
+<ul>
+<li><strong>Reduce First</strong>: \(12 \mod 7 = 5\) (since \(12 = 7 \cdot 1 + 5\)), \(19 \mod 7 = 5\) (since \(19 = 7 \cdot 2 + 5\)), then \(5 + 5 = 10 \mod 7 = 3\).</li>
+<li><strong>Add Then Reduce</strong>: \(12 + 19 = 31 \mod 7 = 3\) (since \(31 = 7 \cdot 4 + 3\)).</li>
+</ul>
+<p><strong>Property</strong>: Commutative (\(a + b \equiv b + a \mod n\)). Try \(4 + 5 \mod 7\): both give 2.</p>
+<h4 id="subtraction"><a class="header" href="#subtraction">Subtraction</a></h4>
+<p>\[
+(a - b) \mod n
+\]
+<strong>Example 1</strong>: Compute \(6 - 3 \mod 7\).</p>
+<ul>
+<li><strong>Reduce First</strong>: \(6 \mod 7 = 6\), \(3 \mod 7 = 3\), then \(6 - 3 = 3 \mod 7 = 3\).</li>
+<li><strong>Subtract Then Reduce</strong>: \(6 - 3 = 3 \mod 7 = 3\).</li>
+</ul>
+<p><strong>Example 2</strong>: Compute \(15 - 8 \mod 7\).</p>
+<ul>
+<li><strong>Reduce First</strong>: \(15 \mod 7 = 1\) (since \(15 = 7 \cdot 2 + 1\)), \(8 \mod 7 = 1\) (since \(8 = 7 \cdot 1 + 1\)), then \(1 - 1 = 0 \mod 7 = 0\).</li>
+<li><strong>Subtract Then Reduce</strong>: \(15 - 8 = 7 \mod 7 = 0\).</li>
+</ul>
+<p><strong>Property</strong>: Each element has an additive inverse (e.g., \(6 + 1 = 7 \mod 7 = 0\), so 1 is the inverse of 6).</p>
+<h4 id="multiplication"><a class="header" href="#multiplication">Multiplication</a></h4>
+<p>\[
+(a \cdot b) \mod n
+\]
+<strong>Example 1</strong>: Compute \(3 \cdot 4 \mod 7\).</p>
+<ul>
+<li><strong>Reduce First</strong>: \(3 \mod 7 = 3\), \(4 \mod 7 = 4\), then \(3 \cdot 4 = 12 \mod 7 = 5\).</li>
+<li><strong>Multiply Then Reduce</strong>: \(3 \cdot 4 = 12 \mod 7 = 5\).</li>
+</ul>
+<p><strong>Example 2</strong>: Compute \(12 \cdot 7001 \mod 7\).</p>
+<ul>
+<li><strong>Reduce First</strong>: \(12 \mod 7 = 5\) (since \(12 = 7 \cdot 1 + 5\)), \(7001 \mod 7 = 1\) (since \(7001 = 7 \cdot 1000 + 1\)), then \(5 \cdot 1 = 5 \mod 7 = 5\).</li>
+<li><strong>Multiply Then Reduce</strong>: \(12 \cdot 7001 = 84012 \mod 7 = 5\) (since \(84012 = 7 \cdot 12001 + 5\)).</li>
+</ul>
+<p><strong>Property</strong>: Distributive (\(a \cdot (b + c) \equiv a \cdot b + a \cdot c \mod n\)). For example, \(2 \cdot (3 + 4) \equiv 2 \cdot 3 + 2 \cdot 4 \mod 7\).</p>
+<h4 id="division"><a class="header" href="#division">Division</a></h4>
+<p>Division by \(b\) requires the multiplicative inverse \(b^{-1}\), where:
+\[
+b \cdot b^{-1} \equiv 1 \pmod{n}, \quad \gcd(b, n) = 1
+\]
+Then:
+\[
+a \div b \equiv a \cdot b^{-1} \pmod{n}
+\]
+An inverse exists only if \(\gcd(b, n) = 1\). In \(\mathbb{Z}_7\), since 7 is prime, all non-zero elements have inverses.</p>
+<p><strong>Example 1</strong>: Compute \(3 \div 5 \mod 7\) (i.e., solve \(5x \equiv 3 \mod 7\)).</p>
+<ul>
+<li>Find inverse of 5: \(5 \cdot 3 = 15 \mod 7 = 1\) (since \(15 = 7 \cdot 2 + 1\)), so \(5^{-1} = 3\).</li>
+<li>Then: \(x \equiv 3 \cdot 3 = 9 \mod 7 = 2\).</li>
+</ul>
+<p><strong>Example 2</strong>: Solve \(4x \equiv 2 \mod 7\).</p>
+<ul>
+<li>Inverse of 4: \(4 \cdot 2 = 8 \mod 7 = 1\), so \(4^{-1} = 2\).</li>
+<li>Then: \(x \equiv 2 \cdot 2 = 4 \mod 7 = 4\).</li>
+</ul>
+<p><strong>Property</strong>: Since 7 is prime, \(\mathbb{Z}_7\) is a field, ideal for cryptographic operations like decryption.</p>
+<h3 id="arithmetic-operations-in-mathbbz_n-1"><a class="header" href="#arithmetic-operations-in-mathbbz_n-1">Arithmetic Operations in \(\mathbb{Z}_n\)</a></h3>
+<p>In \(\mathbb{Z}_n\), we perform operations and reduce modulo \(n\). We can compute in two ways:</p>
+<ol>
+<li><strong>Reduce First</strong>: Compute the remainder of each operand modulo \(n\), then perform the operation.</li>
+<li><strong>Operate Then Reduce</strong>: Perform the operation, then reduce modulo \(n\).</li>
+</ol>
+<p><strong>Exercise</strong>:</p>
+<ol>
+<li>Compute \(20 + 13 \mod 7\) using both methods.</li>
+<li>Compute \(15 - 9 \mod 7\) using both methods.</li>
+<li>Compute \(10 \cdot 16 \mod 7\) using both methods.</li>
+<li>Solve \(3x \equiv 6 \mod 7\) using the inverse method.</li>
+</ol>
+<p><strong>Solutions (for instructors)</strong>:</p>
+<ol>
+<li><strong>Reduce First</strong>: \(20 \mod 7 = 6\), \(13 \mod 7 = 6\), \(6 + 6 = 12 \mod 7 = 5\). <strong>Add Then Reduce</strong>: \(20 + 13 = 33 \mod 7 = 5\).</li>
+<li><strong>Reduce First</strong>: \(15 \mod 7 = 1\), \(9 \mod 7 = 2\), \(1 - 2 = -1 \mod 7 = 6\). <strong>Subtract Then Reduce</strong>: \(15 - 9 = 6 \mod 7 = 6\).</li>
+<li><strong>Reduce First</strong>: \(10 \mod 7 = 3\), \(16 \mod 7 = 2\), \(3 \cdot 2 = 6 \mod 7 = 6\). <strong>Multiply Then Reduce</strong>: \(10 \cdot 16 = 160 \mod 7 = 6\) (since \(160 = 7 \cdot 22 + 6\)).</li>
+<li>Inverse of 3: \(3 \cdot 5 = 15 \mod 7 = 1\), so \(3^{-1} = 5\). Then \(x \equiv 6 \cdot 5 = 30 \mod 7 = 2\). Verify: \(3 \cdot 2 = 6 \mod 7\).</li>
+</ol>
+<h3 id="-modular-exponentiation-big-powers-small-results"><a class="header" href="#-modular-exponentiation-big-powers-small-results">📈 Modular Exponentiation: Big Powers, Small Results</a></h3>
+<p>Modular exponentiation computes \(a^b \mod n\), raising a number to a power and taking the remainder modulo \(n\). It’s vital for RSA encryption, handling large exponents efficiently. Reducing first is practical for cryptography, as it keeps numbers manageable.</p>
+<blockquote>
+<p><strong>Athena’s Guidance</strong>: Exponentiation in \(\mathbb{Z}_n\) is like a merry-go-round—big spins land on the same few spots!</p>
+</blockquote>
+<h4 id="key-property-exponentiation-and-congruence"><a class="header" href="#key-property-exponentiation-and-congruence">Key Property: Exponentiation and Congruence</a></h4>
+<p>If \(a \equiv b \pmod{n}\), does \(a^m \equiv b^m \pmod{n}\)? Yes, always!</p>
+<p><strong>Proof</strong>: If \(a \equiv b \pmod{n}\), then:
+\[
+a = b + k n \quad \text{for some integer } k
+\]
+For \(m = 2\):
+\[
+a^2 = (b + k n)^2 = b^2 + 2 b k n + (k n)^2 \equiv b^2 \mod n
+\]
+Since \(2 b k n\) and \((k n)^2\) are divisible by \(n\). For general \(m\), \(a^m = (b + k n)^m\) has terms with \(n\), so:
+\[
+a^m \equiv b^m \mod n
+\]</p>
+<blockquote>
+<p><strong>Hermes’ Wink</strong>: If two numbers look the same modulo \(n\), their powers do too—like twins who age identically!</p>
+</blockquote>
+<h4 id="examples-of-modular-exponentiation"><a class="header" href="#examples-of-modular-exponentiation">Examples of Modular Exponentiation</a></h4>
+<p><strong>Example 1</strong>: Compute \(21^{2025} \mod 5\).</p>
+<ul>
+<li>Reduce: \(21 \mod 5 = 1\) (since \(21 = 5 \cdot 4 + 1\)).</li>
+<li>Since \(21 \equiv 1 \mod 5\):
+\[
+21^{2025} \equiv 1^{2025} \equiv 1 \mod 5
+\]</li>
+<li>Verify: \(21^2 = 441 \mod 5 = 1\), so \(21^{2025} \equiv 1 \mod 5\).</li>
+</ul>
+<p><strong>Example 2</strong>: Compute \(3^3 \mod 7\).</p>
+<ul>
+<li>Direct: \(3^3 = 27 \mod 7 = 6\) (since \(27 = 7 \cdot 3 + 6\)).</li>
+<li>Step-by-step: \(3^1 \equiv 3\), \(3^2 \equiv 9 \mod 7 = 2\), \(3^3 \equiv 2 \cdot 3 \equiv 6 \mod 7\).</li>
+<li>Property: \(3 \equiv 10 \mod 7\), so \(10^3 \equiv 1000 \mod 7 = 6\).</li>
+</ul>
+<p><strong>Example 3</strong>: Compute \(2^4 \mod 5\).</p>
+<ul>
+<li>Direct: \(2^4 = 16 \mod 5 = 1\) (since \(16 = 5 \cdot 3 + 1\)).</li>
+<li>Step-by-step: \(2^1 \equiv 2\), \(2^2 \equiv 4\), \(2^4 \equiv 4^2 \equiv 16 \mod 5 = 1\).</li>
+<li>Property: \(2 \equiv 7 \mod 5\), so \(7^4 \equiv 2401 \mod 5 = 1\).</li>
+</ul>
+<blockquote>
+<p><strong>Chad</strong>: “Shrinking big numbers first makes these powers easy? Perfect for cryptography!”</p>
+</blockquote>
+<h4 id="fun-exercises-exponentiation-quests"><a class="header" href="#fun-exercises-exponentiation-quests">Fun Exercises: Exponentiation Quests</a></h4>
+<ol>
+<li><strong>Wizard’s Spell</strong>: Compute \(13^{2025} \mod 5\). Hint: Reduce \(13 \mod 5\).</li>
+<li><strong>Hermes’ Quick Trick</strong>: Find \(4^3 \mod 7\). Use direct and step-by-step methods. Check with \(4 \equiv 11 \mod 7\).</li>
+<li><strong>Athena’s Puzzle</strong>: Compute \(3^5 \mod 6\). Why does \(\mathbb{Z}_6\) differ from \(\mathbb{Z}_5\)? Hint: Consider inverses.</li>
+<li><strong>Crypto Challenge</strong>: In toy RSA, message \(m = 2\) is encrypted as \(c = m^3 \mod 7\). Find \(c\). Verify with \(m \equiv 9 \mod 7\).</li>
+</ol>
+<p><strong>Solutions (for instructors)</strong>:</p>
+<ol>
+<li>\(13 \mod 5 = 3\). Since \(3^4 = 81 \mod 5 = 1\), \(3^{2025} = 3^{2024} \cdot 3 \equiv 1^{506} \cdot 3 \equiv 3 \mod 5\).</li>
+<li>Direct: \(4^3 = 64 \mod 7 = 1\). Step-by-step: \(4^1 \equiv 4\), \(4^2 \equiv 16 \mod 7 = 2\), \(4^3 \equiv 2 \cdot 4 \equiv 1\). Property: \(11^3 = 1331 \mod 7 = 1\).</li>
+<li>\(3^5 = 243 \mod 6 = 3\). In \(\mathbb{Z}_6\), \(\gcd(3, 6) \neq 1\), so no inverse, unlike \(\mathbb{Z}_5\), a field.</li>
+<li>\(2^3 = 8 \mod 7 = 1\). Since \(9 \equiv 2 \mod 7\), \(9^3 = 729 \mod 7 = 1\).</li>
+</ol>
+<blockquote>
+<p><strong>Athena’s Tip</strong>: Exponentiation in \(\mathbb{Z}_n\) powers secure systems like RSA. Master it to unlock cryptography’s secrets!</p>
+</blockquote>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../01-Preliminaries/02-preliminaries_number_theory.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../01-Preliminaries/excercise.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../01-Preliminaries/02-preliminaries_number_theory.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../01-Preliminaries/excercise.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>
