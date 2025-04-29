@@ -1201,20 +1201,29 @@ Every integer \(n &gt; 1\) can be written as a product of <strong>prime numbers<
 <p><strong>Athena beams:</strong><br />
 This uniqueness is why primes are cryptography's atoms—each number's genetic code securing encryption.”</p>
 </blockquote>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="-modular-arithmetic-the-clockwork-realm-of-cryptography"><a class="header" href="#-modular-arithmetic-the-clockwork-realm-of-cryptography">⚙️ Modular Arithmetic: The Clockwork Realm of Cryptography</a></h1>
-<h2 id="-why-modular-arithmetic"><a class="header" href="#-why-modular-arithmetic">🔐 Why Modular Arithmetic?</a></h2>
-<p>Cryptography requires mathematics that is:</p>
-<ol>
-<li><strong>Finite</strong>: Computers need bounded sets, not infinite ones.</li>
-<li><strong>Efficient</strong>: Operations like encryption must be fast.</li>
-<li><strong>Hard to Reverse</strong>: Without a secret key, reversing operations (e.g., decryption) should be nearly impossible.</li>
-</ol>
-<h3 id="introduction-to-modular-arithmetic"><a class="header" href="#introduction-to-modular-arithmetic">Introduction to Modular Arithmetic</a></h3>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="modular-arithmetic-when-infinity-meets-the-finite"><a class="header" href="#modular-arithmetic-when-infinity-meets-the-finite">Modular Arithmetic: When Infinity Meets the Finite</a></h1>
 <blockquote>
-<p><strong>Athena</strong>: We reviewed sets and integers, but the integers (\(\mathbb{Z}\)) are infinite and lack a robust division operation suitable for cryptography. We need a finite, structured system. Let’s dive into modular arithmetic, step by step.</p>
+<p>Atop the boundless peaks of Olympus, where the gods held infinite power, numbers were born. Boom, boom, boom… one, two, three, and onward to eternity, they marched in an eternal dance, each following the other. <strong>Apollo</strong>, god of light and order, gifted numbers to mortals, yet how could a finite grasp the infinite. Among the endless lines and spirals of eternity, <strong>Harmonia</strong>, goddess of balance and cycles, stepped forward. With delicate fingers, she traced a circle in the sands of abstraction—closed, perfect, eternal.
+This circle created a cycle that tied the infinite to the finite. Numbers, like stars on a cosmic dial, spun around this sacred plane, returning to their origin with each turn. <strong>Euterpe</strong>, muse of harmony, struck her lyre, and the <strong>Cycle of Remainders</strong> was born. No longer did numbers stretch endlessly; they danced in harmonious rings, each step measured by the sacred modulus, weaving patterns of repetition and unity across the mathematical cosmos.
+In this new realm of modular arithmetic, mathematics revealed the hidden music of numbers. Time folded upon itself, calculations became cyclical, and every number found its place through remainders and return. Within Harmonia's circle, the infinite rested in the finite, and numbers spun forever in an eternal dance of return."</p>
+</blockquote>
+<h3 id="learning-objectives"><a class="header" href="#learning-objectives">🎯Learning Objectives</a></h3>
+<p>By the end of this lecture, you will be able to:</p>
+<ul>
+<li>Define modular arithmetic and the set \(\mathbb{Z}_n\).</li>
+<li>Perform addition, subtraction, multiplication, and exponentiation in \(\mathbb{Z}_n\).</li>
+<li>Compute multiplicative inverses in \(\mathbb{Z}_n\) using trial-and-error and the Extended Euclidean Algorithm.</li>
+<li>Understand why modular arithmetic is fundamental to cryptographic systems.</li>
+<li>Solve linear congruences and apply them to simple cryptographic problems.</li>
+</ul>
+<h2 id="1-the-need-for-finite-systems-in-cryptography"><a class="header" href="#1-the-need-for-finite-systems-in-cryptography">1. The need for finite systems in cryptography</a></h2>
+<blockquote>
+<p><strong>Athena</strong>: We've reviewed sets and integers, but for our cryptographic needs, the infinite expanse of \( \mathbb{Z} \) is unwieldy—like trying to store the ocean in a cup. Integers lack a robust division structure, and infinity offers little structure to build on.</p>
+<p>We need something different: a system that is <strong>finite yet powerful</strong>, <strong>structured yet flexible</strong>. This is where modular arithmetic performs its quiet alchemy.</p>
+<p>Let us dive into it, step by step.</p>
 </blockquote>
 <blockquote>
-<p>One clever way to shrink the infinite integers is to view them through a lens called \(\mathbb{Z}_7\). In this world, we reduce each integer to its remainder when divided by 7, using the modular operation.</p>
+<p>One elegant way to shrink the infinite is to view the integers through a new lens: \(\mathbb{Z}_7\). In this modular world, every integer is reduced to its <strong>remainder when divided by 7</strong>, allowing us to work within a finite, circular universe using the modular operation.</p>
 </blockquote>
 <blockquote>
 <p>For example, consider the number 10:
@@ -1227,18 +1236,17 @@ So, in \(\mathbb{Z}_7\), \(10\) is represented as 3.</p>
 <p><strong>Chad</strong>: "Okay, cool. What about 17? I can write \(17 = 7 \cdot 2 + 3\), so 17 is 3 in \(\mathbb{Z}_7\), right?"</p>
 </blockquote>
 <blockquote>
-<p><strong>Hermes</strong>: "Hold on! What if I write \(17 = 7 \cdot 1 + 10\)? Does that mean 17 is 10 in \(\mathbb{Z}_7\)? That’s confusing!"</p>
+<p><strong>Hermes</strong>: "Hold on! What if I write \(17 = 7 \cdot 1 + 10\)? Does that mean 17 is 10 in \(\mathbb{Z}_7\)? That's confusing!"</p>
 </blockquote>
 <blockquote>
-<p><strong>Athena</strong>: "Great catch, Hermes! This is where the <strong>Division Theorem</strong> saves us. Let’s recall it:</p>
+<p><strong>Athena</strong>: "Great catch, Hermes! This is precisely why we invoke the Division Theorem - our mathematical anchor in these modular seas."
+Let's recall it:</p>
 </blockquote>
-<blockquote>
 <blockquote>
 <p><strong>Division Theorem</strong>: For any integer \(n\) and positive integer \(m\), there exist unique integers \(q\) (quotient) and \(r\) (remainder) such that:
 \[
 n = m \cdot q + r, \quad 0 \leq r &lt; m
 \]</p>
-</blockquote>
 </blockquote>
 <blockquote>
 <p>This ensures a unique remainder \(r\) between 0 and \(m-1\). For 17 in \(\mathbb{Z}_7\):
@@ -1254,56 +1262,76 @@ Writing \(17 = 7 \cdot 1 + 10\) violates the theorem because \(r = 10 \geq 7\)."
 <p><strong>Chad</strong>: "What about negative numbers? Do they work too?"</p>
 </blockquote>
 <blockquote>
-<p><strong>Hermes</strong>: "Absolutely! The quotient \(q\) can be negative, but the remainder \(r\) must be between 0 and 6. Take (-15):
+<p><strong>Hermes</strong>: "Absolutely! The quotient \(q\) can be negative, but the remainder \(r\) must be between 0 and 6. Take \(-15\):
 \[
 -15 = 7 \cdot (-3) + 6 \quad \Rightarrow \quad -15 \equiv 6 \pmod{7}
 \]
-If you try \(-15 = 7 \cdot (-2) + (-1)\), the remainder (-1) is invalid since it’s negative."</p>
+If you try \(-15 = 7 \cdot (-2) + (-1)\), the remainder \(-1\) is invalid since it's negative."</p>
 </blockquote>
 <blockquote>
 <p><strong>Chad</strong>: "Nice! And zero is just zero, right? \(0 \mod 7 = 0\). Numbers less than 7 stay the same, like \(1 \equiv 1\), \(2 \equiv 2\). But negatives flip, like:
 \[
 -1 = 7 \cdot (-1) + 6 \quad \Rightarrow \quad -1 \equiv 6 \pmod{7}
 \]
-That’s wild!"</p>
+That's wild!"</p>
 </blockquote>
 <blockquote>
-<p><strong>Athena</strong>: "You’re catching on fast! Now, let’s formalize this and explore how to operate in this finite world."</p>
+<p><strong>Athena</strong>: "You're catching on fast! Now, let's formalize this and explore how to operate in this finite world."</p>
 </blockquote>
-<h3 id="modular-arithmetic-when-infinity-meets-the-finite--mathbbz_n-the-magic-circle"><a class="header" href="#modular-arithmetic-when-infinity-meets-the-finite--mathbbz_n-the-magic-circle">Modular Arithmetic: When Infinity Meets the Finite — \(\mathbb{Z}_n\), the Magic Circle</a></h3>
-<p>For a positive integer \(n\), we define the set \(\mathbb{Z}_n\), the <strong>integers modulo \(n\)</strong>, as:
+<h2 id="2-mathbbz_n-the-magic-circle"><a class="header" href="#2-mathbbz_n-the-magic-circle">2. \(\mathbb{Z}_n\), the Magic Circle</a></h2>
+<p>For any positive integer n, the set of integers modulo n is:
 \[
-\mathbb{Z}_n = {[0], [1], [2], \dots, [n-1]}
-\]
-Each element \([i]\) is an <strong>equivalence class</strong>—a set of integers with the same remainder \(i\) when divided by \(n\). Formally, for integer \(a\):
-\[
-[a] = { \dots, a - 2n, a - n, a, a + n, a + 2n, \dots }
-\]
-In practice, we write \([i]\) as \(i\) for simplicity in \(\mathbb{Z}_n\), so:
-\[
-\mathbb{Z}_n = {0, 1, 2, \dots, n-1}
-\]
-This shorthand avoids confusion, as \(i\) represents the class \([i]\). Let’s illustrate with \(\mathbb{Z}_7\):</p>
-<ul>
-<li>\([0]\): \(\dots, -14, -7, 0, 7, 14, 21, \dots\) (multiples of 7).</li>
-<li>\([1]\): \(\dots, -13, -6, 1, 8, 15, 22, \dots\) (remainder 1).</li>
-<li>\([2]\): \(\dots, -12, -5, 2, 9, 16, 23, \dots\) (remainder 2).</li>
-<li>\([3]\): \(\dots, -11, -4, 3, 10, 17, 24, \dots\) (remainder 3).</li>
-<li>\([4]\): \(\dots, -10, -3, 4, 11, 18, 25, \dots\) (remainder 4).</li>
-<li>\([5]\): \(\dots, -9, -2, 5, 12, 19, 26, \dots\) (remainder 5).</li>
-<li>\([6]\): \(\dots, -8, -1, 6, 13, 20, 27, \dots\) (remainder 6).</li>
-</ul>
-<p><strong>Table of Equivalence Classes in \(\mathbb{Z}_7\)</strong>:
-\[
-\begin{array}{c|ccccccc}
-\text{Remainder} &amp; 0 &amp; 1 &amp; 2 &amp; 3 &amp; 4 &amp; 5 &amp; 6 \
-\hline
-\text{Examples} &amp; \dots, -7, 0, 7, \dots &amp; \dots, -6, 1, 8, \dots &amp; \dots, -5, 2, 9, \dots &amp; \dots, -4, 3, 10, \dots &amp; \dots, -3, 4, 11, \dots &amp; \dots, -2, 5, 12, \dots &amp; \dots, -1, 6, 13, \dots \
-\end{array}
+ℤ_n = {[0], [1], [2], \dots, [n-1]}
 \]</p>
-<blockquote>
-<p><strong>Athena’s Wisdom</strong>: The division theorem guarantees each integer belongs to exactly one class, making \(\mathbb{Z}_n\) finite with \(n\) elements (0 to \(n-1\)). This finiteness is key for cryptography.</p>
-</blockquote>
+<p>Each element [k] represents an equivalence class containing all integers congruent to k modulo n:
+\[
+[k] = {\dots, k-2n, k-n, k, k+n, k+2n, \dots}
+\]</p>
+<h4 id="simple-examples"><a class="header" href="#simple-examples"><strong>Simple Examples</strong></a></h4>
+<p><strong>1. ℤ₂ - The Binary System</strong>
+The smallest non-trivial case has two equivalence classes:</p>
+<ul>
+<li>[0] = {..., -4, -2, 0, 2, 4, ...} (all even numbers)</li>
+<li>[1] = {..., -3, -1, 1, 3, 5, ...} (all odd numbers)</li>
+</ul>
+<p>Operations in ℤ₂:</p>
+<ul>
+<li>0 + 0 ≡ 0 mod 2</li>
+<li>0 + 1 ≡ 1 mod 2</li>
+<li>1 + 1 ≡ 0 mod 2 (since 2 ≡ 0 mod 2)</li>
+<li>1 × 1 ≡ 1 mod 2</li>
+</ul>
+<p><strong>2. ℤ₃ - Three-Class System</strong></p>
+<ul>
+<li>[0] = {..., -6, -3, 0, 3, 6, ...}</li>
+<li>[1] = {..., -5, -2, 1, 4, 7, ...}</li>
+<li>[2] = {..., -4, -1, 2, 5, 8, ...}</li>
+</ul>
+<p>Sample operations:</p>
+<ul>
+<li>2 + 2 ≡ 1 mod 3 (since 4 ≡ 1 mod 3)</li>
+<li>2 × 2 ≡ 1 mod 3 (since 4 ≡ 1 mod 3)</li>
+</ul>
+<h4 id="general-structure"><a class="header" href="#general-structure"><strong>General Structure</strong></a></h4>
+<p>For any ℤₙ:</p>
+<ol>
+<li><strong>Additive Structure</strong>: Forms a cyclic group under addition</li>
+<li><strong>Multiplicative Structure</strong>: Units form a group when n is prime</li>
+<li><strong>Canonical Representation</strong>: Typically use {0, 1, ..., n-1} as class representatives</li>
+</ol>
+<h4 id="visualization-ℤ₅-as-a-cycle"><a class="header" href="#visualization-ℤ₅-as-a-cycle"><strong>Visualization: ℤ₅ as a Cycle</strong></a></h4>
+<pre><code>0 → 1 → 2 → 3 → 4
+↑_____________↓
+</code></pre>
+<p>All arithmetic "wraps around" after reaching 5.</p>
+<h4 id="example-ℤ₇"><a class="header" href="#example-ℤ₇"><strong>Example: ℤ₇</strong></a></h4>
+<p>The modular arithmetic system ℤ₇ consists of seven equivalence classes:</p>
+<ul>
+<li>[0] contains all multiples of 7: {..., -14, -7, 0, 7, 14, ...}</li>
+<li>[1] contains integers congruent to 1 mod 7: {..., -13, -6, 1, 8, 15, ...}</li>
+<li>This pattern continues through [6]: {..., -8, -1, 6, 13, 20, ...}</li>
+</ul>
+<p>The Division Theorem ensures this classification is both complete and unambiguous - every integer belongs to exactly one equivalence class in ℤₙ, creating a finite system of n distinct elements.</p>
 <p><strong>Congruence</strong>: Two integers \(a\) and \(b\) are <strong>congruent modulo \(n\)</strong>, written \(a \equiv b \pmod{n}\), if \(n\) divides \(a - b\):
 \[
 a \equiv b \pmod{n} \quad \Leftrightarrow \quad n \mid (a - b)
@@ -1313,167 +1341,288 @@ a \equiv b \pmod{n} \quad \Leftrightarrow \quad n \mid (a - b)
 a = n \cdot q_a + r, \quad b = n \cdot q_b + r \quad \Rightarrow \quad a - b = n \cdot q_a + r - (n \cdot q_b + r) = n (q_a - q_b)
 \]
 Thus, \(n \mid (a - b)\). For example, \(19 \equiv 12 \pmod{7}\) since \(19 - 12 = 7\), and \(7 \mid 7\).</p>
-<p>In \(\mathbb{Z}_n\), numbers are “equal” if they share the same remainder, redefining equality for cryptographic operations.</p>
-<h3 id="arithmetic-operations-in-mathbbz_n"><a class="header" href="#arithmetic-operations-in-mathbbz_n">Arithmetic Operations in \(\mathbb{Z}_n\)</a></h3>
-<p>In \(\mathbb{Z}_n\), we perform operations (addition, subtraction, multiplication, division) and reduce the result modulo \(n\). A powerful feature is that we can compute in two equivalent ways:</p>
+<p>SO in fact in \(\mathbb{Z}_n\), numbers are "equal" if they share the same remainder, redefining equality for cryptographic operations.</p>
+<h4 id="key-properties"><a class="header" href="#key-properties"><strong>Key Properties</strong></a></h4>
 <ol>
-<li><strong>Reduce First</strong>: Compute the remainder of each operand modulo \(n\), then perform the operation in \(\mathbb{Z}_n\).</li>
-<li><strong>Operate Then Reduce</strong>: Perform the operation on the original numbers, then reduce modulo \(n\).</li>
+<li><strong>Finiteness</strong>: Exactly n distinct classes despite infinite ℤ</li>
+<li><strong>Consistency</strong>: a ≡ b mod n ⇒ a and b behave identically in ℤₙ</li>
+<li><strong>Computational Use</strong>: Enables working with large numbers via small residues</li>
 </ol>
-<p>This flexibility simplifies computations, especially with large numbers, and is crucial for efficient cryptographic algorithms. Let’s explore each operation with examples in \(\mathbb{Z}_7\).</p>
+<h2 id="3-arithmetic-operations-in-mathbbz_n"><a class="header" href="#3-arithmetic-operations-in-mathbbz_n">3. Arithmetic Operations in \(\mathbb{Z}_n\)</a></h2>
+<p>Modular arithmetic in ℤₙ supports four fundamental operations (addition, subtraction, multiplication, and division) with results reduced modulo n. A key computational advantage is the flexibility to:</p>
+<ol>
+<li><strong>Reduce-then-operate</strong>: Simplify operands first, then perform the operation</li>
+<li><strong>Operate-then-reduce</strong>: Compute first, then simplify the result</li>
+</ol>
+<p>Both methods yield identical results, enabling optimization based on computational context. We illustrate these operations using ℤ₇ as our working example.</p>
 <blockquote>
-<p><strong>Athena’s Wisdom</strong>: Whether you reduce first or operate then reduce, the result is the same—modular arithmetic’s magic ensures consistency!</p>
+<p><strong>Key Insight</strong>: The equivalence of these approaches stems from modular arithmetic's fundamental property: congruence is preserved under addition, subtraction, and multiplication.</p>
 </blockquote>
-<h4 id="addition"><a class="header" href="#addition">Addition</a></h4>
-<p>\[
-(a + b) \mod n
-\]
-<strong>Example 1</strong>: Compute \(5 + 4 \mod 7\).</p>
+<h4 id="1-addition-in-ℤₙ"><a class="header" href="#1-addition-in-ℤₙ">1. Addition in ℤₙ</a></h4>
+<p>The sum (a + b) mod n can be computed as:</p>
+<p><strong>Example 1</strong>: 5 + 4 mod 7</p>
 <ul>
-<li><strong>Reduce First</strong>: \(5 \mod 7 = 5\), \(4 \mod 7 = 4\), then \(5 + 4 = 9 \mod 7 = 2\).</li>
-<li><strong>Add Then Reduce</strong>: \(5 + 4 = 9 \mod 7 = 2\).</li>
+<li>Reduce-then-operate: (5 mod 7) + (4 mod 7) = 5 + 4 = 9 ≡ 2 mod 7</li>
+<li>Operate-then-reduce: 5 + 4 = 9 ≡ 2 mod 7</li>
 </ul>
-<p><strong>Example 2</strong>: Compute \(12 + 19 \mod 7\).</p>
+<p><strong>Example 2</strong>: 12 + 19 mod 7</p>
 <ul>
-<li><strong>Reduce First</strong>: \(12 \mod 7 = 5\) (since \(12 = 7 \cdot 1 + 5\)), \(19 \mod 7 = 5\) (since \(19 = 7 \cdot 2 + 5\)), then \(5 + 5 = 10 \mod 7 = 3\).</li>
-<li><strong>Add Then Reduce</strong>: \(12 + 19 = 31 \mod 7 = 3\) (since \(31 = 7 \cdot 4 + 3\)).</li>
+<li>Reduce-then-operate: (12 mod 7) + (19 mod 7) = 5 + 5 = 10 ≡ 3 mod 7</li>
+<li>Operate-then-reduce: 12 + 19 = 31 ≡ 3 mod 7</li>
 </ul>
-<p><strong>Property</strong>: Commutative (\(a + b \equiv b + a \mod n\)). Try \(4 + 5 \mod 7\): both give 2.</p>
-<h4 id="subtraction"><a class="header" href="#subtraction">Subtraction</a></h4>
-<p>\[
-(a - b) \mod n
-\]
-<strong>Example 1</strong>: Compute \(6 - 3 \mod 7\).</p>
+<p><strong>Properties</strong>:</p>
 <ul>
-<li><strong>Reduce First</strong>: \(6 \mod 7 = 6\), \(3 \mod 7 = 3\), then \(6 - 3 = 3 \mod 7 = 3\).</li>
-<li><strong>Subtract Then Reduce</strong>: \(6 - 3 = 3 \mod 7 = 3\).</li>
+<li>Commutative: a + b ≡ b + a mod n</li>
+<li>Associative: (a + b) + c ≡ a + (b + c) mod n</li>
+<li>Additive identity: a + 0 ≡ a mod n</li>
 </ul>
-<p><strong>Example 2</strong>: Compute \(15 - 8 \mod 7\).</p>
+<h4 id="2-subtraction-in-ℤₙ"><a class="header" href="#2-subtraction-in-ℤₙ">2. Subtraction in ℤₙ</a></h4>
+<p>The difference (a - b) mod n follows similar rules:</p>
+<p><strong>Example 1</strong>: 6 - 3 mod 7</p>
 <ul>
-<li><strong>Reduce First</strong>: \(15 \mod 7 = 1\) (since \(15 = 7 \cdot 2 + 1\)), \(8 \mod 7 = 1\) (since \(8 = 7 \cdot 1 + 1\)), then \(1 - 1 = 0 \mod 7 = 0\).</li>
-<li><strong>Subtract Then Reduce</strong>: \(15 - 8 = 7 \mod 7 = 0\).</li>
+<li>Both approaches yield 3 mod 7</li>
 </ul>
-<p><strong>Property</strong>: Each element has an additive inverse (e.g., \(6 + 1 = 7 \mod 7 = 0\), so 1 is the inverse of 6).</p>
-<h4 id="multiplication"><a class="header" href="#multiplication">Multiplication</a></h4>
-<p>\[
-(a \cdot b) \mod n
-\]
-<strong>Example 1</strong>: Compute \(3 \cdot 4 \mod 7\).</p>
+<p><strong>Example 2</strong>: 15 - 8 mod 7</p>
 <ul>
-<li><strong>Reduce First</strong>: \(3 \mod 7 = 3\), \(4 \mod 7 = 4\), then \(3 \cdot 4 = 12 \mod 7 = 5\).</li>
-<li><strong>Multiply Then Reduce</strong>: \(3 \cdot 4 = 12 \mod 7 = 5\).</li>
+<li>Reduce-then-operate: (15 mod 7) - (8 mod 7) = 1 - 1 = 0 mod 7</li>
+<li>Operate-then-reduce: 15 - 8 = 7 ≡ 0 mod 7</li>
 </ul>
-<p><strong>Example 2</strong>: Compute \(12 \cdot 7001 \mod 7\).</p>
+<p><strong>Key Property</strong>: Every element has a unique additive inverse. For a ∈ ℤₙ, its inverse is (n - a) mod n.</p>
+<h4 id="3-multiplication-in-ℤₙ"><a class="header" href="#3-multiplication-in-ℤₙ">3. Multiplication in ℤₙ</a></h4>
+<p>The product (a · b) mod n demonstrates modular arithmetic's power:</p>
+<p><strong>Example 1</strong>: 3 · 4 mod 7</p>
 <ul>
-<li><strong>Reduce First</strong>: \(12 \mod 7 = 5\) (since \(12 = 7 \cdot 1 + 5\)), \(7001 \mod 7 = 1\) (since \(7001 = 7 \cdot 1000 + 1\)), then \(5 \cdot 1 = 5 \mod 7 = 5\).</li>
-<li><strong>Multiply Then Reduce</strong>: \(12 \cdot 7001 = 84012 \mod 7 = 5\) (since \(84012 = 7 \cdot 12001 + 5\)).</li>
+<li>Both methods yield 12 ≡ 5 mod 7</li>
 </ul>
-<p><strong>Property</strong>: Distributive (\(a \cdot (b + c) \equiv a \cdot b + a \cdot c \mod n\)). For example, \(2 \cdot (3 + 4) \equiv 2 \cdot 3 + 2 \cdot 4 \mod 7\).</p>
-<h4 id="division"><a class="header" href="#division">Division</a></h4>
-<p>Division by \(b\) requires the multiplicative inverse \(b^{-1}\), where:
-\[
-b \cdot b^{-1} \equiv 1 \pmod{n}, \quad \gcd(b, n) = 1
-\]
-Then:
-\[
-a \div b \equiv a \cdot b^{-1} \pmod{n}
-\]
-An inverse exists only if \(\gcd(b, n) = 1\). In \(\mathbb{Z}_7\), since 7 is prime, all non-zero elements have inverses.</p>
-<p><strong>Example 1</strong>: Compute \(3 \div 5 \mod 7\) (i.e., solve \(5x \equiv 3 \mod 7\)).</p>
+<p><strong>Example 2</strong>: 12 · 7001 mod 7</p>
 <ul>
-<li>Find inverse of 5: \(5 \cdot 3 = 15 \mod 7 = 1\) (since \(15 = 7 \cdot 2 + 1\)), so \(5^{-1} = 3\).</li>
-<li>Then: \(x \equiv 3 \cdot 3 = 9 \mod 7 = 2\).</li>
+<li>Reduce-then-operate: (12 mod 7) · (7001 mod 7) = 5 · 1 = 5 mod 7</li>
+<li>Operate-then-reduce: 12 · 7001 = 84012 ≡ 5 mod 7</li>
 </ul>
-<p><strong>Example 2</strong>: Solve \(4x \equiv 2 \mod 7\).</p>
+<p><strong>Properties</strong>:</p>
 <ul>
-<li>Inverse of 4: \(4 \cdot 2 = 8 \mod 7 = 1\), so \(4^{-1} = 2\).</li>
-<li>Then: \(x \equiv 2 \cdot 2 = 4 \mod 7 = 4\).</li>
+<li>Commutative and associative</li>
+<li>Distributive over addition</li>
+<li>Multiplicative identity: a · 1 ≡ a mod n</li>
 </ul>
-<p><strong>Property</strong>: Since 7 is prime, \(\mathbb{Z}_7\) is a field, ideal for cryptographic operations like decryption.</p>
-<h3 id="arithmetic-operations-in-mathbbz_n-1"><a class="header" href="#arithmetic-operations-in-mathbbz_n-1">Arithmetic Operations in \(\mathbb{Z}_n\)</a></h3>
-<p>In \(\mathbb{Z}_n\), we perform operations and reduce modulo \(n\). We can compute in two ways:</p>
+<h4 id="computational-note"><a class="header" href="#computational-note">Computational Note</a></h4>
+<p>The equivalence of both computation methods provides crucial flexibility:</p>
+<ul>
+<li>Reduce-then-operate minimizes intermediate values</li>
+<li>Operate-then-reduce may simplify complex expressions</li>
+</ul>
+<p><strong>Exercises</strong>:</p>
 <ol>
-<li><strong>Reduce First</strong>: Compute the remainder of each operand modulo \(n\), then perform the operation.</li>
-<li><strong>Operate Then Reduce</strong>: Perform the operation, then reduce modulo \(n\).</li>
+<li>Compute 20 + 13 mod 7 using both methods</li>
+<li>Compute 15 - 9 mod 7 using both methods</li>
+<li>Compute 10 · 16 mod 7 using both methods</li>
+<li>Solve 3x ≡ 6 mod 7 using inverses</li>
 </ol>
-<p><strong>Exercise</strong>:</p>
-<ol>
-<li>Compute \(20 + 13 \mod 7\) using both methods.</li>
-<li>Compute \(15 - 9 \mod 7\) using both methods.</li>
-<li>Compute \(10 \cdot 16 \mod 7\) using both methods.</li>
-<li>Solve \(3x \equiv 6 \mod 7\) using the inverse method.</li>
-</ol>
-<p><strong>Solutions (for instructors)</strong>:</p>
-<ol>
-<li><strong>Reduce First</strong>: \(20 \mod 7 = 6\), \(13 \mod 7 = 6\), \(6 + 6 = 12 \mod 7 = 5\). <strong>Add Then Reduce</strong>: \(20 + 13 = 33 \mod 7 = 5\).</li>
-<li><strong>Reduce First</strong>: \(15 \mod 7 = 1\), \(9 \mod 7 = 2\), \(1 - 2 = -1 \mod 7 = 6\). <strong>Subtract Then Reduce</strong>: \(15 - 9 = 6 \mod 7 = 6\).</li>
-<li><strong>Reduce First</strong>: \(10 \mod 7 = 3\), \(16 \mod 7 = 2\), \(3 \cdot 2 = 6 \mod 7 = 6\). <strong>Multiply Then Reduce</strong>: \(10 \cdot 16 = 160 \mod 7 = 6\) (since \(160 = 7 \cdot 22 + 6\)).</li>
-<li>Inverse of 3: \(3 \cdot 5 = 15 \mod 7 = 1\), so \(3^{-1} = 5\). Then \(x \equiv 6 \cdot 5 = 30 \mod 7 = 2\). Verify: \(3 \cdot 2 = 6 \mod 7\).</li>
-</ol>
-<h3 id="-modular-exponentiation-big-powers-small-results"><a class="header" href="#-modular-exponentiation-big-powers-small-results">📈 Modular Exponentiation: Big Powers, Small Results</a></h3>
-<p>Modular exponentiation computes \(a^b \mod n\), raising a number to a power and taking the remainder modulo \(n\). It’s vital for RSA encryption, handling large exponents efficiently. Reducing first is practical for cryptography, as it keeps numbers manageable.</p>
-<blockquote>
-<p><strong>Athena’s Guidance</strong>: Exponentiation in \(\mathbb{Z}_n\) is like a merry-go-round—big spins land on the same few spots!</p>
-</blockquote>
-<h4 id="key-property-exponentiation-and-congruence"><a class="header" href="#key-property-exponentiation-and-congruence">Key Property: Exponentiation and Congruence</a></h4>
-<p>If \(a \equiv b \pmod{n}\), does \(a^m \equiv b^m \pmod{n}\)? Yes, always!</p>
-<p><strong>Proof</strong>: If \(a \equiv b \pmod{n}\), then:
+<h2 id="4-modular-exponentiation-big-powers-small-results"><a class="header" href="#4-modular-exponentiation-big-powers-small-results">4. Modular Exponentiation: Big Powers, Small Results</a></h2>
+<p>Modular exponentiation, the computation of \( a^b \mod n \), serves as a cornerstone for modern cryptographic systems. This operation combines the efficiency of modular reduction with the power of exponentiation, enabling secure computations even with extremely large numbers.</p>
+<h4 id="fundamental-congruence-property"><a class="header" href="#fundamental-congruence-property"><strong>Fundamental Congruence Property</strong></a></h4>
+<p>A crucial property governs modular exponentiation:
+If \( a \equiv b \pmod{n} \), then \( a^m \equiv b^m \pmod{n} \) for any positive integer \( m \).</p>
+<p><strong>Proof</strong>:<br />
+Let \( a = b + kn \) for some integer \( k \). Expanding \( a^m \) via the binomial theorem:
 \[
-a = b + k n \quad \text{for some integer } k
+a^m = (b + kn)^m = b^m + m b^{m-1}(kn) + \cdots + (kn)^m
 \]
-For \(m = 2\):
+All terms except \( b^m \) contain \( n \) as a factor, thus:
 \[
-a^2 = (b + k n)^2 = b^2 + 2 b k n + (k n)^2 \equiv b^2 \mod n
-\]
-Since \(2 b k n\) and \((k n)^2\) are divisible by \(n\). For general \(m\), \(a^m = (b + k n)^m\) has terms with \(n\), so:
-\[
-a^m \equiv b^m \mod n
+a^m \equiv b^m \pmod{n}
 \]</p>
-<blockquote>
-<p><strong>Hermes’ Wink</strong>: If two numbers look the same modulo \(n\), their powers do too—like twins who age identically!</p>
-</blockquote>
-<h4 id="examples-of-modular-exponentiation"><a class="header" href="#examples-of-modular-exponentiation">Examples of Modular Exponentiation</a></h4>
-<p><strong>Example 1</strong>: Compute \(21^{2025} \mod 5\).</p>
-<ul>
-<li>Reduce: \(21 \mod 5 = 1\) (since \(21 = 5 \cdot 4 + 1\)).</li>
-<li>Since \(21 \equiv 1 \mod 5\):
+<p>This property allows us to reduce the base before exponentiation, dramatically simplifying computations.</p>
+<hr />
+<h4 id="computational-techniques"><a class="header" href="#computational-techniques"><strong>Computational Techniques</strong></a></h4>
+<ol>
+<li>
+<p><strong>Direct Reduction</strong><br />
+Reduce the base modulo \( n \) first, then exponentiate:
 \[
-21^{2025} \equiv 1^{2025} \equiv 1 \mod 5
+a^b \mod n = (a \mod n)^b \mod n
+\]</p>
+</li>
+<li>
+<p><strong>Step-wise Reduction</strong><br />
+For larger exponents, reduce modulo \( n \) at each step to control intermediate values:
+\[
+a^b \mod n = \underbrace{(a \times a \times \cdots \times a)}_{b \text{ times}} \mod n
+\]
+with reduction after each multiplication.</p>
+</li>
+</ol>
+<hr />
+<h4 id="practical-examples"><a class="header" href="#practical-examples"><strong>Practical Examples</strong></a></h4>
+<p><strong>Example 1</strong>: Compute \( 21^{2025} \mod 5 \)</p>
+<ol>
+<li>Reduce base: \( 21 \equiv 1 \mod 5 \)</li>
+<li>Thus \( 21^{2025} \equiv 1^{2025} \equiv 1 \mod 5 \)</li>
+</ol>
+<p><strong>Example 2</strong>: Compute \( 3^3 \mod 7 \)</p>
+<ul>
+<li>Direct: \( 3^3 = 27 \equiv 6 \mod 7 \) (since 27 - 3×7 = 6)</li>
+<li>Step-wise:
+\[
+3^1 \equiv 3 \\
+3^2 \equiv 9 \equiv 2 \\
+3^3 \equiv 2 \times 3 = 6 \mod 7
 \]</li>
-<li>Verify: \(21^2 = 441 \mod 5 = 1\), so \(21^{2025} \equiv 1 \mod 5\).</li>
 </ul>
-<p><strong>Example 2</strong>: Compute \(3^3 \mod 7\).</p>
+<p><strong>Example 3</strong>: Compute \( 2^4 \mod 5 \)</p>
 <ul>
-<li>Direct: \(3^3 = 27 \mod 7 = 6\) (since \(27 = 7 \cdot 3 + 6\)).</li>
-<li>Step-by-step: \(3^1 \equiv 3\), \(3^2 \equiv 9 \mod 7 = 2\), \(3^3 \equiv 2 \cdot 3 \equiv 6 \mod 7\).</li>
-<li>Property: \(3 \equiv 10 \mod 7\), so \(10^3 \equiv 1000 \mod 7 = 6\).</li>
+<li>Direct: \( 16 \equiv 1 \mod 5 \)</li>
+<li>Via congruence: \( 2 \equiv 7 \mod 5 \), so \( 7^4 = 2401 \equiv 1 \mod 5 \)</li>
 </ul>
-<p><strong>Example 3</strong>: Compute \(2^4 \mod 5\).</p>
+<hr />
+<h4 id="why-this-matters-in-cryptography"><a class="header" href="#why-this-matters-in-cryptography"><strong>Why This Matters in Cryptography</strong></a></h4>
+<ol>
+<li><strong>RSA Encryption</strong>: Relies on \( m^e \mod n \) computations</li>
+<li><strong>Diffie-Hellman</strong>: Uses \( g^x \mod p \) for key exchange</li>
+<li><strong>Efficiency</strong>: Even with 1000-digit numbers, computations remain feasible</li>
+</ol>
+<blockquote>
+<p><strong>Security Insight</strong>: While computing \( a^b \mod n \) is efficient, reversing it (the discrete logarithm problem) is computationally hard - this asymmetry enables secure cryptography. We will see a lot more soon!</p>
+</blockquote>
+<p>Here's an enhanced version with a concise yet clear addition about Montgomery reduction, maintaining your original content's style while adding valuable technical depth:</p>
+<h3 id="efficient-computation-methods"><a class="header" href="#efficient-computation-methods"><strong>Efficient Computation Methods</strong></a></h3>
+<p>While modular exponentiation provides the foundation, certain algorithms optimize these computations further. One particularly elegant solution is <strong>Montgomery reduction</strong>, which eliminates the need for expensive division operations in modular arithmetic.</p>
+<h4 id="montgomery-reduction-overview"><a class="header" href="#montgomery-reduction-overview"><strong>Montgomery Reduction Overview</strong></a></h4>
+<p>This method transforms numbers into a special representation (Montgomery form) where modular reduction becomes a simple shift operation. The algorithm requires:</p>
+<ol>
+<li>A modulus \( n \) (odd integer)</li>
+<li>A radix \( R &gt; n \) coprime with \( n\)</li>
+<li>Precomputed value \( n' = -n^{-1} \mod R \)</li>
+</ol>
+<p><strong>Core Algorithm</strong>:</p>
+<pre><code class="language-python">def montgomery_reduce(T, n, n_prime, R):
+    # T is the number to reduce
+    m = (T * n_prime) % R  # Multiply by precomputed value
+    t = (T + m * n) // R    # Shift right by log2(R) bits
+    if t &gt;= n:
+        return t - n
+    return t
+</code></pre>
+<p><strong>Why It Matters</strong>:</p>
 <ul>
-<li>Direct: \(2^4 = 16 \mod 5 = 1\) (since \(16 = 5 \cdot 3 + 1\)).</li>
-<li>Step-by-step: \(2^1 \equiv 2\), \(2^2 \equiv 4\), \(2^4 \equiv 4^2 \equiv 16 \mod 5 = 1\).</li>
-<li>Property: \(2 \equiv 7 \mod 5\), so \(7^4 \equiv 2401 \mod 5 = 1\).</li>
+<li>Replaces division with multiplication and shifts</li>
+<li>Particularly efficient for hardware implementations</li>
+<li>Essential for fast modular exponentiation in cryptography</li>
 </ul>
 <blockquote>
-<p><strong>Chad</strong>: “Shrinking big numbers first makes these powers easy? Perfect for cryptography!”</p>
+<p><strong>Athena's Insight</strong>: <em>"Montgomery's method is like giving our modular arithmetic a turbo boost - it transforms messy divisions into clean, efficient operations perfect for cryptographic computations."</em></p>
 </blockquote>
+<h4 id="practical-impact"><a class="header" href="#practical-impact"><strong>Practical Impact</strong></a></h4>
+<p>When combined with exponentiation algorithms (like square-and-multiply), Montgomery reduction enables:</p>
+<ul>
+<li>Faster RSA operations</li>
+<li>Efficient elliptic curve cryptography</li>
+<li>Optimized implementations in cryptographic hardware</li>
+</ul>
+<p>This mathematical innovation demonstrates how clever representations can dramatically improve computational efficiency in modular arithmetic - a crucial consideration for real-world cryptographic systems.</p>
 <h4 id="fun-exercises-exponentiation-quests"><a class="header" href="#fun-exercises-exponentiation-quests">Fun Exercises: Exponentiation Quests</a></h4>
 <ol>
-<li><strong>Wizard’s Spell</strong>: Compute \(13^{2025} \mod 5\). Hint: Reduce \(13 \mod 5\).</li>
-<li><strong>Hermes’ Quick Trick</strong>: Find \(4^3 \mod 7\). Use direct and step-by-step methods. Check with \(4 \equiv 11 \mod 7\).</li>
-<li><strong>Athena’s Puzzle</strong>: Compute \(3^5 \mod 6\). Why does \(\mathbb{Z}_6\) differ from \(\mathbb{Z}_5\)? Hint: Consider inverses.</li>
+<li><strong>Wizard's Spell</strong>: Compute \(13^{2025} \mod 5\). Hint: Reduce \(13 \mod 5\).</li>
+<li><strong>Hermes' Quick Trick</strong>: Find \(4^3 \mod 7\). Use direct and step-by-step methods. Check with \(4 \equiv 11 \mod 7\).</li>
+<li><strong>Athena's Puzzle</strong>: Compute \(3^5 \mod 6\). Why does \(\mathbb{Z}_6\) differ from \(\mathbb{Z}_5\)? Hint: Consider inverses.</li>
 <li><strong>Crypto Challenge</strong>: In toy RSA, message \(m = 2\) is encrypted as \(c = m^3 \mod 7\). Find \(c\). Verify with \(m \equiv 9 \mod 7\).</li>
 </ol>
-<p><strong>Solutions (for instructors)</strong>:</p>
-<ol>
-<li>\(13 \mod 5 = 3\). Since \(3^4 = 81 \mod 5 = 1\), \(3^{2025} = 3^{2024} \cdot 3 \equiv 1^{506} \cdot 3 \equiv 3 \mod 5\).</li>
-<li>Direct: \(4^3 = 64 \mod 7 = 1\). Step-by-step: \(4^1 \equiv 4\), \(4^2 \equiv 16 \mod 7 = 2\), \(4^3 \equiv 2 \cdot 4 \equiv 1\). Property: \(11^3 = 1331 \mod 7 = 1\).</li>
-<li>\(3^5 = 243 \mod 6 = 3\). In \(\mathbb{Z}_6\), \(\gcd(3, 6) \neq 1\), so no inverse, unlike \(\mathbb{Z}_5\), a field.</li>
-<li>\(2^3 = 8 \mod 7 = 1\). Since \(9 \equiv 2 \mod 7\), \(9^3 = 729 \mod 7 = 1\).</li>
-</ol>
+<h2 id="5-division-in-mathbbz_n"><a class="header" href="#5-division-in-mathbbz_n">5. Division in \(\mathbb{Z}_n\)</a></h2>
 <blockquote>
-<p><strong>Athena’s Tip</strong>: Exponentiation in \(\mathbb{Z}_n\) powers secure systems like RSA. Master it to unlock cryptography’s secrets!</p>
+<p><strong>Athena</strong>: So far, we've defined addition and multiplication in \(\mathbb{Z}_n\), and they behave similarly to \(\mathbb{Z}\). However, the primary motivation behind introducing \(\mathbb{Z}_n\) was to facilitate division.</p>
+<p><strong>Hermes</strong>: Indeed, we aimed for a number system balancing:</p>
+<ol>
+<li><strong>Finiteness</strong> (unlike \(\mathbb{Q}\), which is infinite and "too continuous" for discrete applications).</li>
+<li><strong>Division-friendliness</strong> (unlike \(\mathbb{Z}\), where division frequently fails). By <em>wrapping</em> \(\mathbb{Z}\) into \(\mathbb{Z}_n\), we achieve finiteness. But does this system support division?</li>
+</ol>
+<p><strong>Athena</strong>: Let's investigate!</p>
 </blockquote>
+<h3 id="additive-inverses-the-easy-case"><a class="header" href="#additive-inverses-the-easy-case">Additive Inverses: The Easy Case</a></h3>
+<p>In \(\mathbb{Z}_n\), addition (and subtraction) work smoothly because every element has an additive inverse:</p>
+<ul>
+<li>For \(a \in \mathbb{Z}_n\), the additive inverse is \(-a \equiv n - a \mod n\).</li>
+<li>This property lets us reverse addition easily: \(a + b \equiv c \mod n \implies c + (-b) \equiv a \mod n\).</li>
+</ul>
+<p><strong>Examples in \(\mathbb{Z}_7\)</strong>:</p>
+<ul>
+<li>\(3 + 4 \equiv 0 \mod 7\), thus \(-3 \equiv 4 \mod 7\).</li>
+<li>\(18 + 3 \equiv 0 \mod 7\) since \(18 \equiv 4 \mod 7\), and indeed, \(4 + 3 = 7 \equiv 0 \mod 7\).</li>
+</ul>
+<p><strong>Key Insight</strong>: \(\mathbb{Z}_n\) mirrors \(\mathbb{Z}\)—every element can reach \(0\) through addition.</p>
+<h3 id="multiplicative-inverses-the-division-challenge"><a class="header" href="#multiplicative-inverses-the-division-challenge">Multiplicative Inverses: The Division Challenge</a></h3>
+<p>In \(\mathbb{Q}\), division uses multiplicative inverses: \(a/b = a \cdot b^{-1}\), where \(b^{-1}\) satisfies \(b \cdot b^{-1} = 1\). Can \(\mathbb{Z}_n\) replicate this?</p>
+<p>###Finding Inverses by Brute Force<br />
+<strong>Example</strong>: Find the multiplicative inverse of \(3\) in \(\mathbb{Z}_7\). Testing each candidate:</p>
+<p>\[
+3 \cdot 5 \equiv 1 \mod 7 \quad (\text{Inverse found: } 3^{-1} \equiv 5 \mod 7)
+\]</p>
+<p>Division by \(3\) equals multiplication by \(5\).</p>
+<p><strong>Corrected Example</strong>: Solve \(3x \equiv 4 \mod 7\):</p>
+<ul>
+<li>Multiply by inverse \(5\): \(x \equiv 4 \cdot 5 \equiv 20 \equiv 6 \mod 7\).</li>
+<li>Check: \(3 \cdot 6 = 18 \equiv 4 \mod 7\). Correct!</li>
+</ul>
+<h3 id="when-inverses-fail-zero-divisors"><a class="header" href="#when-inverses-fail-zero-divisors">When Inverses Fail: Zero Divisors</a></h3>
+<p><strong>Example</strong>: Find inverse of \(3\) in \(\mathbb{Z}_6\). No inverse exists, as \(\gcd(3, 6) = 3 \neq 1\).</p>
+<p>This illustrates <strong>zero divisors</strong>, a significant obstacle:</p>
+<ul>
+<li><strong>Definition</strong>: Non-zero elements \(a, b \in \mathbb{Z}_n\) with \(a \cdot b \equiv 0 \mod n\).</li>
+<li>Example in \(\mathbb{Z}_6\): \(2 \cdot 3 = 6 \equiv 0 \mod 6\).</li>
+</ul>
+<p><strong>Important Observation</strong>:<br />
+Zero divisors exist in \(\mathbb{Z}_n\) for composite \(n\). Prime moduli \(\mathbb{Z}_p\) lack zero divisors, as primes have no nontrivial factors, making all non-zero elements invertible. Hence, \(\mathbb{Z}_p\) forms a <em>field</em>, fundamental in cryptography.</p>
+<p><strong>Exercises for Thought</strong>:</p>
+<ul>
+<li>Find all zero divisors in \(\mathbb{Z}_{10}\).</li>
+<li>Why don't zero divisors appear in \(\mathbb{Q}\) or \(\mathbb{Z}_p\)?</li>
+</ul>
+<h3 id="division-in-mathbbz_n"><a class="header" href="#division-in-mathbbz_n">Division in \(\mathbb{Z}_n\)</a></h3>
+<p>With multiplicative inverses, division in \(\mathbb{Z}_n\) (where \(\gcd(a, n) = 1\)) is:
+\[
+\frac{b}{a} \equiv b \cdot a^{-1} \mod n.
+\]</p>
+<h4 id="examples-of-division"><a class="header" href="#examples-of-division">Examples of Division</a></h4>
+<ol>
+<li>
+<p><strong>Compute \(\frac{4}{3}\) in \(\mathbb{Z}_7\)</strong>:<br />
+\(\frac{4}{3} \equiv 4 \cdot 5 = 20 \equiv 6 \mod 7\).</p>
+</li>
+<li>
+<p><strong>Attempt \(\frac{5}{2}\) in \(\mathbb{Z}_8\)</strong>:<br />
+No inverse; thus undefined, as \(\gcd(2, 8) \neq 1\).</p>
+</li>
+<li>
+<p><strong>Solve \(4x \equiv 3 \mod 11\)</strong>:<br />
+Inverse of \(4\) is \(3\), thus \(x \equiv 3 \cdot 3 \equiv 9 \mod 11\).</p>
+</li>
+</ol>
+<h4 id="tools-for-finding-inverses"><a class="header" href="#tools-for-finding-inverses">Tools for Finding Inverses</a></h4>
+<p>Efficient methods include:</p>
+<h5 id="extended-euclidean-algorithm"><a class="header" href="#extended-euclidean-algorithm">Extended Euclidean Algorithm</a></h5>
+<p>Finds \(\gcd(a, n)\) and expresses it as \(ax + ny = \gcd(a, n)\). For \(\gcd(a, n)=1\), this provides inverses.</p>
+<p><strong>Example</strong>: Inverse of \(3\) in \(\mathbb{Z}_7\):
+\[
+7 = 2 \cdot 3 + 1 \implies 1 = 7 - 2 \cdot 3 \equiv (-2) \cdot 3 \mod 7 \equiv 5 \cdot 3 \mod 7.
+\]
+Thus, \(3^{-1} \equiv 5\mod 7\).</p>
+<h5 id="fermats-little-theorem"><a class="header" href="#fermats-little-theorem">Fermat's Little Theorem</a></h5>
+<p>For prime \(p\), inverse is given by:
+\[
+a^{-1} \equiv a^{p-2} \mod p.
+\]
+<strong>Example</strong>: Inverse of \(3\) in \(\mathbb{Z}_7\):
+\[
+3^{5} = 243 \equiv 5 \mod 7.
+\]
+Check confirms correctness.</p>
+<h4 id="exercises-1"><a class="header" href="#exercises-1">Exercises</a></h4>
+<ol>
+<li>Calculate \(\frac{4}{3}\) in \(\mathbb{Z}_7\).</li>
+<li>Explain why \(\frac{5}{2}\) is undefined in \(\mathbb{Z}_8\).</li>
+<li>Find inverse of \(5\) in \(\mathbb{Z}_{11}\) using Extended Euclidean Algorithm.</li>
+<li>Use Fermat's Little Theorem to find inverse of \(2\) in \(\mathbb{Z}_{13}\).</li>
+</ol>
+<p>Division in \(\mathbb{Z}_n\) relies on multiplicative inverses, available only when \(\gcd(a, n)=1\). Prime moduli ensure invertibility for all non-zero elements, ideal for cryptography. Tools like the Extended Euclidean Algorithm and Fermat's Little Theorem simplify computations, transforming division challenges into manageable tasks. Next, we'll explore how these concepts influence algebraic structures such as groups.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="examples-and-exercises"><a class="header" href="#examples-and-exercises">Examples and Exercises</a></h1>
 <h2 id="-examples"><a class="header" href="#-examples">📚 Examples</a></h2>
 <h3 id="basic-divisibility-examples"><a class="header" href="#basic-divisibility-examples">Basic Divisibility Examples</a></h3>
